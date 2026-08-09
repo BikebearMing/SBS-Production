@@ -1,0 +1,3583 @@
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --bg: #0000;
+    --bg-light: #242424;
+    --sidepadding-xs: 1.111vw;
+    --sidepadding-xm: 6.042vw;
+    --red: #da2128;
+    --amplitude: "amplitude", sans-serif;
+    --amplitude-condensed: "amplitude-condensed", sans-serif;
+}
+
+main.grain-effect {
+    position: relative;
+}
+
+.grain-effect::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    /* Sits above the page sections (awards/projects/services carry z-index 1–2
+       with opaque black backgrounds, which would otherwise hide the grain) but
+       below the nav (999), cursors (50) and modals. */
+    z-index: 3;
+    opacity: 0.055;
+    pointer-events: none;
+    background-image: url("/tv-static.gif");
+    background-position: 0 0;
+    background-size: auto;
+}
+
+html,
+body {
+    height: 100%;
+    background: #000000;
+    color: var(--text);
+    font-family: var(--inter);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+.black {
+    color: #000000;
+}
+
+.red-section {
+    background: var(--red);
+
+    & * {
+        color: white !important;
+    }
+}
+
+.dark {
+    color: white !important;
+}
+
+.amplitude {
+    font-family: var(--amplitude-condensed) !important;
+}
+
+.h1 {
+    font-family: var(--serif);
+    font-size: 6.944vw;
+    letter-spacing: -0.208vw;
+    font-weight: 400;
+    line-height: 1;
+}
+
+.h1-v2 {
+    font-family: var(--amplitude-condensed);
+    font-size: 12.5vw;
+    line-height: 1;
+    font-weight: 700;
+    letter-spacing: -0.486vw;
+}
+
+/* .h1-v2 at ~72% scale — for displays where the full size overwhelms
+   (e.g. the Impact CTA "LET'S CONNECT" heading). */
+.h1-v2-sm {
+    font-family: var(--amplitude-condensed);
+    font-size: 9.03vw;
+    line-height: 1;
+    font-weight: 700;
+    letter-spacing: -0.351vw;
+}
+
+/* Condensed display heading sized so a full-sentence line fits one row
+   (hero cycling headlines). */
+.h1-v3 {
+    font-family: var(--amplitude-condensed);
+    font-size: 5.2vw;
+    line-height: 1;
+    font-weight: 700;
+    letter-spacing: -0.15vw;
+    text-transform: uppercase;
+}
+
+
+.hero-parent .h2-serif {
+    font-size: 3.6vw;
+}
+
+/* SplitText mask wrappers (MaskUpHeadings) clip at their padding edge, and the
+   condensed headings' negative letter-spacing ends the measured line box before
+   the last glyph's ink does — pad the mask (offset by margin so layout doesn't
+   shift) so the final letter isn't shaved on the right. */
+.amp-mask-line-mask {
+    padding-right: 0.06em;
+    margin-right: -0.06em;
+}
+
+/* Serif supporting line paired with .h1-v3 (hero cycling subheadings). */
+.h2-serif {
+    font-family: var(--serif);
+    font-size: 2.6vw;
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: 0;
+    text-transform: uppercase;
+}
+
+.h2 {
+    font-family: var(--amplitude-condensed);
+    font-size: 4.167vw;
+    font-weight: 700;
+    letter-spacing: -0.139vw;
+    text-transform: uppercase;
+    line-height: 1;
+}
+
+.h3 {
+    font-family: var(--amplitude-condensed);
+    font-size: 2.431vw;
+    font-weight: 700;
+    line-height: 0.85;
+    letter-spacing: -0.056vw;
+}
+
+h4,
+.h4 {
+    font-family: var(--amplitude-condensed);
+    font-size: 1.6vw;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    text-transform: uppercase;
+    line-height: 1;
+}
+
+.body {
+    font-family: var(--inter);
+    font-size: 0.972vw;
+    font-weight: 500;
+    line-height: 1.28;
+    letter-spacing: 0;
+    text-transform: uppercase;
+}
+
+.subhead {
+    font-family: var(--inter);
+    font-size: 0.972vw;
+    font-weight: 500;
+    line-height: 1.28;
+    letter-spacing: 0;
+}
+
+/* Breadcrumb (e.g. HOME / AWARDS) — pair with .body for typography.
+   Links (ancestor pages) are grey; the <span> (active page) is white. */
+.breadcrumb {
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 1.5vw;
+}
+
+.breadcrumb a:hover {
+    color: #ffffff;
+}
+
+.breadcrumb span {
+    color: #ffffff;
+}
+
+canvas {
+    pointer-events: none;
+}
+
+.site-header {
+    width: 100%;
+    position: fixed;
+    z-index: 999;
+    background-color: #000;
+
+    & .wrapper {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        padding: var(--sidepadding-xs);
+    }
+}
+
+/* Stack the CTA + secondary page links in a right-aligned column. Only the
+   first child (the .custom-button "Let's Talk") keeps the red fill, hover wipe
+   and ring icon; the rest are plain right-aligned text links. */
+.site-header__nav {
+    display: flex;
+    align-items: center;
+    flex-direction: row-reverse;
+    text-align: right;
+    gap: 0.694vw;
+}
+
+.site-header__nav .custom-button {
+    margin-bottom: 0;
+    margin-left: 1vw;
+}
+
+.site-header__nav-link {
+    color: #fff;
+    text-decoration: none;
+    transition: color 0.35s ease;
+}
+
+.site-header__nav-link:hover {
+    color: var(--red);
+}
+
+/* Hamburger — hidden on desktop, shown on mobile (see the mobile block). */
+.site-header__burger {
+    display: none;
+    position: relative;
+    z-index: 3;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 7.5vw;
+    height: 5.8vw;
+    padding: 0;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.site-header__burger-line {
+    display: block;
+    width: 100%;
+    height: 0.5vw;
+    background: #fff;
+    transition:
+        transform 0.35s cubic-bezier(0.6, 0, 0.3, 1),
+        opacity 0.2s ease;
+}
+
+/* Open state → morph the three bars into an X (translate = bar-to-bar gap,
+   (height − line) / 2). */
+.site-header.is-menu-open .site-header__burger-line:nth-child(1) {
+    transform: translateY(2.65vw) rotate(45deg);
+}
+
+.site-header.is-menu-open .site-header__burger-line:nth-child(2) {
+    opacity: 0;
+}
+
+.site-header.is-menu-open .site-header__burger-line:nth-child(3) {
+    transform: translateY(-2.65vw) rotate(-45deg);
+}
+
+/* Full-screen scrim behind the drawer; click to close. */
+.site-menu {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    background-color: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition:
+        opacity 0.45s ease,
+        visibility 0s linear 0.45s;
+}
+
+.site-header.is-menu-open .site-menu {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transition:
+        opacity 0.45s ease,
+        visibility 0s;
+}
+
+/* The drawer itself — slides in from the right. */
+.site-menu__panel {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(78vw, 360px);
+    background-color: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: translateX(100%);
+    transition: transform 0.5s cubic-bezier(0.6, 0, 0.3, 1);
+}
+
+.site-header.is-menu-open .site-menu__panel {
+    transform: translateX(0);
+}
+
+.site-menu__list {
+    list-style: none;
+    margin: 0;
+    padding: var(--sidepadding-xm);
+    display: flex;
+    flex-direction: column;
+    gap: 5vw;
+    text-align: center;
+}
+
+.site-menu__link {
+    display: inline-block;
+    color: #fff;
+    text-decoration: none;
+    transform: translateY(40px);
+    opacity: 0;
+    transition:
+        color 0.35s ease,
+        transform 0.55s cubic-bezier(0.6, 0, 0.3, 1),
+        opacity 0.55s ease;
+}
+
+.site-menu__link:hover {
+    color: var(--red);
+}
+
+.site-header.is-menu-open .site-menu__link {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.site-header.is-menu-open .site-menu__item:nth-child(1) .site-menu__link { transition-delay: 0.08s; }
+.site-header.is-menu-open .site-menu__item:nth-child(2) .site-menu__link { transition-delay: 0.14s; }
+.site-header.is-menu-open .site-menu__item:nth-child(3) .site-menu__link { transition-delay: 0.2s; }
+.site-header.is-menu-open .site-menu__item:nth-child(4) .site-menu__link { transition-delay: 0.26s; }
+.site-header.is-menu-open .site-menu__item:nth-child(5) .site-menu__link { transition-delay: 0.32s; }
+.site-header.is-menu-open .site-menu__item:nth-child(6) .site-menu__link { transition-delay: 0.38s; }
+
+.custom-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 3.472vw;
+    background: var(--red);
+    padding: 0.833vw;
+    color: white;
+    text-transform: uppercase;
+    border: unset;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    transition: color 0.35s ease;
+    font-family: var(--inter);
+    font-size: 1rem;
+    line-height: 1;
+    text-align: left;
+    text-decoration: none;
+    vertical-align: middle;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+button {
+    font-family: var(--inter);
+}
+
+.custom-button > * {
+    position: relative;
+    z-index: 1;
+}
+
+.custom-button::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0.833vw;
+    width: 1em;
+    height: 1em;
+    background: #ffffff;
+    border-radius: 50%;
+    transform: translateY(-50%) scale(0);
+    transform-origin: center center;
+    transition: transform 0.55s cubic-bezier(0.6, 0, 0.3, 1);
+    z-index: 0;
+}
+
+.custom-button:hover,
+.custom-button:hover * {
+    color: #000000 !important;
+}
+
+.custom-button:hover::before {
+    transform: translateY(-50%) scale(40);
+}
+
+.custom-button-icon {
+    width: 1em;
+    height: 1em;
+    overflow: visible;
+    flex-shrink: 0;
+}
+
+.custom-button-icon .ring {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    transition:
+        fill 0.35s ease,
+        stroke 0.35s ease,
+        r 0.35s ease;
+}
+
+.custom-button:hover .ring--outer {
+    stroke: #ffffff;
+}
+
+.custom-button:hover .ring--middle,
+.custom-button:hover .ring--inner {
+    fill: var(--red);
+    stroke: var(--red);
+}
+
+.custom-button:hover .ring--inner {
+    r: 7;
+}
+
+.pin-stack {
+    position: relative;
+}
+
+.hero-parent {
+    position: relative;
+    height: 100lvh;
+
+    &::after {
+        z-index: 9999;
+    }
+
+    /* Layout only — typography comes from the global .h1-v3 / .h2-serif classes. */
+    & .hero-copy {
+        position: absolute;
+        top: 5.764vw;
+        left: 3.5vw;
+        right: 3.5vw;
+        z-index: 20;
+        pointer-events: none;
+        display: flex;
+        flex-direction: column;
+        /* gap: 1.2vw; */
+        transition: opacity 0.35s ease;
+    }
+
+    &.is-dim .hero-copy {
+        opacity: 0.2;
+    }
+}
+
+.cylinder-hover-label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 25;
+    max-width: 18vw;
+    pointer-events: none;
+    color: #000;
+    font-family: var(--inter);
+    text-transform: uppercase;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    will-change: transform, opacity;
+}
+
+.cylinder-hover-label.is-visible {
+    opacity: 1;
+}
+
+.cylinder-hover-label__brand,
+.cylinder-hover-label__copy {
+    background: #ffffff;
+    padding: 0.1vw 0.3vw;
+    font-family: var(--inter);
+    font-weight: 400;
+    overflow: hidden;
+    display: block;
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: break-word;
+}
+
+.cylinder-hover-label__brand > span,
+.cylinder-hover-label__copy > span {
+    display: block;
+    transform: translateY(110%);
+    transition: transform 0.5s cubic-bezier(0.6, 0, 0.3, 1);
+    will-change: transform;
+}
+
+.cylinder-hover-label.is-visible .cylinder-hover-label__brand > span {
+    transform: translateY(0);
+}
+
+.cylinder-hover-label.is-visible .cylinder-hover-label__copy > span {
+    transform: translateY(0);
+    transition-delay: 0.08s;
+}
+
+.parallax-img,
+.project-image img.parallax-img {
+    position: absolute;
+    inset: auto 0 auto 0;
+    width: 100%;
+    height: 130%;
+    top: -15%;
+    object-fit: cover;
+    display: block;
+    will-change: transform;
+}
+
+.line {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: bottom;
+    line-height: 1;
+}
+
+.line-inner {
+    display: block;
+    will-change: transform;
+}
+
+.typewriter {
+    display: inline-block;
+    vertical-align: bottom;
+    clip-path: inset(0 100% 0 0);
+    font-family: var(--serif);
+}
+
+section.services {
+    position: relative;
+    z-index: 2;
+    background: #000000;
+    color: white;
+    padding-inline: 12.222vw; /* 176px on the 1440 base */
+    padding-block: 5.556vw;
+    overflow-x: clip;
+
+    & .wrapper {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+.h1.amplitude {
+    font-weight: 700;
+}
+
+.h1.amplitude .text-highlight {
+    font-weight: 400;
+}
+
+.services-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 2vw;
+    margin-bottom: 5.208vw;
+    flex-direction: column;
+    width: fit-content;
+    align-self: center;
+}
+
+.services-heading__title {
+    line-height: 1;
+}
+
+.works-title {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7vw;
+    position: absolute;
+    left: 6vw;
+    bottom: 2.3vw;
+    z-index: 5;
+    line-height: 1;
+
+    @media (max-width: 768px) {
+        bottom: unset;
+        top: 25vw;
+        /* Centred like the other pages' titles (client feedback). */
+        left: 0;
+        right: 0;
+        align-items: center;
+        text-align: center;
+
+        /* Client-requested arrangement: "The Works" share one line (kill the
+           desktop line break) with "WE'RE PROUD OF" staggered right below. */
+        & h2 br {
+            display: none;
+        }
+
+        /* Standard mobile title size (matches homepage headers / other pages). */
+        & h2 {
+            font-size: 9.5vw;
+        }
+    }
+}
+
+.works-breadcrumb {
+    position: absolute;
+    left: 6vw;
+    top: 7.6vw;
+    z-index: 5;
+    margin-bottom: 0;
+}
+
+/* Black, grain-textured backdrop for the works page — mirrors .awards-page.
+   Fixed-position children (slider/title/breadcrumb) float over it. */
+.works-page {
+    position: relative;
+    background: #000000;
+    color: #ffffff;
+    min-height: 100vh;
+    overflow: hidden;
+    isolation: isolate;
+    padding-inline: 19.6vw 1vw;
+    display: grid;
+    grid-template-columns: 160fr 517fr 420fr;
+    align-items: center;
+    gap: 1.25vw;
+}
+
+/* Masonry backdrop — the works' images tiled B&W at low opacity, under the
+   same black radial vignette as the homepage projects background. Sits at
+   z-index -1 inside the isolated .works-page, above its black background. */
+.works-bg {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.works-bg__grid {
+    display: flex;
+    /* Columns must keep their natural (content) height — the drift translates
+       by -50% of the column itself, which only equals one tile-copy when the
+       column isn't stretched to the viewport. */
+    align-items: flex-start;
+    gap: 0.8vw;
+    padding-inline: 0.8vw;
+}
+
+/* Each column drifts on its own slow loop; tile spacing comes from the img
+   margin (not flex gap) so translating by -50% lands exactly on the second
+   copy of the tiles and the wrap is invisible. */
+.works-bg__col {
+    flex: 1;
+    will-change: transform;
+    animation: works-bg-drift 200s linear infinite;
+}
+
+.works-bg__col:nth-child(2n) {
+    animation-direction: reverse;
+}
+
+.works-bg__col:nth-child(2) {
+    animation-duration: 260s;
+}
+
+.works-bg__col:nth-child(3) {
+    animation-duration: 175s;
+}
+
+.works-bg__col:nth-child(4) {
+    animation-duration: 230s;
+}
+
+@keyframes works-bg-drift {
+    from {
+        transform: translateY(0);
+    }
+    to {
+        transform: translateY(-50%);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .works-bg__col {
+        animation: none;
+    }
+}
+
+.works-bg__img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    margin-bottom: 0.8vw;
+    filter: grayscale(1) brightness(0.85) contrast(0.85);
+    opacity: 0.45;
+}
+
+/* Tile height variants (assigned in WorksMasonryBg) for the masonry stagger. */
+.works-bg__img--landscape {
+    aspect-ratio: 4 / 3;
+}
+
+.works-bg__img--square {
+    aspect-ratio: 1 / 1;
+}
+
+.works-bg__img--portrait {
+    aspect-ratio: 3 / 4;
+}
+
+.works-bg__img--wide {
+    aspect-ratio: 16 / 9;
+}
+
+.works-bg::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(
+        43.59% 45.04% at 50% 50%,
+        rgba(0, 0, 0, 0) 0%,
+        #000 100%
+    );
+}
+
+@media (max-width: 768px) {
+    .works-bg__grid {
+        gap: 2vw;
+        padding-inline: 2vw;
+    }
+
+    /* Two columns on mobile — the hidden ones' flex share goes to the rest. */
+    .works-bg__col:nth-child(n + 3) {
+        display: none;
+    }
+
+    .works-bg__img {
+        margin-bottom: 2vw;
+    }
+}
+
+.works-slider .splide__track {
+    overflow: visible;
+}
+
+.works-slider__slide {
+    cursor: pointer;
+    position: relative;
+}
+
+.works-slider__link {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+/* Desktop: the slider auto-scrolls, so the button follows the hovered slide
+   (auto-scroll pauses on hover) rather than whichever slide is centered. */
+@media (hover: hover) {
+    .works-slider__slide:hover .works-slider__link {
+        visibility: visible;
+        opacity: 1;
+        pointer-events: auto;
+    }
+}
+
+/* Touch/mobile: hide the on-image overlay button — the CTA moves below the
+   carousel instead (see .works-showcase__cta). */
+@media (max-width: 768px) {
+    .works-slider__link {
+        display: none;
+    }
+}
+
+/* Desktop: the title / year / description / tags only appear while a slide is
+   hovered (`.is-revealing` is toggled by WorksShowcase). Hidden via opacity so
+   the grid columns keep their place and the slider stays centered. */
+.works-showcase__title,
+.works-showcase__detail {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.works-page.is-revealing .works-showcase__title,
+.works-page.is-revealing .works-showcase__detail {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Mobile keeps the static slider, so always show the centered slide's details. */
+@media (max-width: 768px) {
+    .works-showcase__title,
+    .works-showcase__detail {
+        opacity: 1;
+        pointer-events: auto;
+    }
+}
+
+.projects .works-slider__img {
+    object-fit: contain !important;
+}
+
+.works-slider__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* TEMP: content-specific zoom for the Carey Island slide artwork (the
+   "Screenshot 2026-06-23 at 11.05.58" upload doesn't fill its frame).
+   Targeted by src so it also hits Splide's loop clones and survives
+   reordering — remove once the artwork is re-exported properly cropped. */
+.works-slider__slide {
+    overflow: hidden;
+}
+
+.works-slider__img[src*="11.05.58"] {
+    transform: scale(1.1);
+}
+
+/* ── Desktop: scroll-driven vertical works stack (WorksScrollStack) ────────
+   A tall `.works-scroll` track (height set inline from JS) holds a sticky
+   100vh section. The `.works-stack` is translated by scroll progress so one
+   slide sits at centre, framed by `.works-reticle`. */
+.works-scroll {
+    position: relative;
+}
+
+.works-page--pinned {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    min-height: 0;
+}
+
+/* Pinned layout reveals content from the centred slide, not hover. */
+.works-page--pinned .works-showcase__title,
+.works-page--pinned .works-showcase__detail {
+    opacity: 1;
+    pointer-events: auto;
+    transition: none;
+}
+
+.works-stack-viewport {
+    position: relative;
+    height: 100vh;
+    overflow: visible;
+}
+
+.works-stack {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2.2vw;
+    will-change: transform;
+}
+
+
+/* .impact-cta__top .amp-mask-line-mask {
+    padding: 0.1em;
+} */
+
+.works-stack__slide {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 2 / 1;
+    overflow: hidden;
+}
+
+.works-stack__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Fixed centre reticle framing the centred slide + its VIEW PROJECT link. */
+.works-reticle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    aspect-ratio: 2 / 1;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.works-reticle__corner {
+    position: absolute;
+    width: 1.6vw;
+    height: 1.6vw;
+    border: 0.16vw solid #ffffff;
+}
+
+.works-reticle__corner--tl { top: -0.5vw; left: -0.5vw; border-right: none; border-bottom: none; }
+.works-reticle__corner--tr { top: -0.5vw; right: -0.5vw; border-left: none; border-bottom: none; }
+.works-reticle__corner--br { bottom: -0.5vw; right: -0.5vw; border-left: none; border-top: none; }
+.works-reticle__corner--bl { bottom: -0.5vw; left: -0.5vw; border-right: none; border-top: none; }
+
+.works-reticle__link {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 3;
+}
+
+.works-showcase__detail {
+    display: flex;
+    gap: 8.8vw;
+    align-items: center;
+}
+
+.works-showcase__detail-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25vw;
+}
+
+.works-showcase__detail-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55vw;
+}
+
+.works-showcase__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7vw 0.5vw;
+}
+
+.works-showcase__tag {
+    padding: 0.35vw 0.7vw;
+    border-radius: 1.4vw;
+    background: #3E3D3D;
+}
+
+/* ── Mobile: stack the works showcase as a single column ──────────────────
+   Instead of the desktop 3-column grid, the horizontal peek slider sits on
+   top (see WorksSlider.tsx) with the centered work's title + tags below it. */
+@media (max-width: 768px) {
+    .works-page {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 7vw;
+        padding-inline: 0;
+        padding-block: 26vw 22vw;
+    }
+
+    .works-slider {
+        order: 1;
+        width: 100%;
+    }
+
+    /* .works-slider__img {
+        object-fit: contain;
+    } */
+
+    .works-showcase__title {
+        order: 2;
+        margin: 0;
+        text-align: center;
+        padding-inline: 6vw;
+    }
+
+    .work-detail__grid-img {
+        aspect-ratio: unset !important;
+    }
+
+    .works-showcase__detail {
+        order: 3;
+        flex-direction: column;
+        align-items: center;
+        gap: 0;
+        width: 100%;
+        padding-inline: 6vw;
+    }
+
+    .works-showcase__cta {
+        order: 4;
+    }
+
+    /* Mobile shows just the centered work's title + tags — hide the rest. */
+    .works-showcase__year,
+    .works-showcase__detail-text {
+        display: none;
+    }
+
+    .works-showcase__tags {
+        justify-content: center;
+    }
+
+    .works-showcase__tag {
+        padding: 1.4vw 3vw;
+        border-radius: 6vw;
+    }
+}
+
+/* Per-work inner page (route: /works/[slug]) — mirrors the dark works backdrop. */
+.work-detail {
+    position: relative;
+    background: #000000;
+    color: #ffffff;
+    min-height: 100vh;
+    overflow: hidden;
+    isolation: isolate;
+    padding: 7.6vw 1.3vw 6.4vw;
+}
+
+.work-detail__breadcrumb {
+    margin: 0 4.5vw 2vw;
+}
+
+.work-detail__head {
+    display: flex;
+    gap: 1.4vw;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding: 0 5.2vw 1.9vw 4.5vw;
+}
+
+.work-detail__title {
+    font-size: 4.5vw;
+    line-height: .9;
+    letter-spacing: -0.208vw;
+    text-transform: uppercase;
+}
+
+.work-detail__meta {
+    display: flex;
+    flex-direction: column;
+    gap: 1vw;
+    flex-wrap: wrap;
+}
+
+.work-detail__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7vw 0.5vw;
+}
+
+.work-detail__tag {
+    padding: 0.35vw 0.7vw;
+    border-radius: 1.4vw;
+    background: #3E3D3D;
+}
+
+.work-detail__media {
+    overflow: hidden;
+}
+
+.work-detail__img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: contain;
+}
+
+/* Optional paragraph sections (Project Brief / The Solution / Impact & Results) */
+.work-detail__section {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2vw;
+    padding: 3.6vw 19.5vw 0;
+}
+
+.work-detail__section-heading {
+    opacity: 0.5;
+}
+
+.work-detail__section-body {
+    max-width: 58vw;
+    letter-spacing: 0.035vw;
+    line-height: 1.4;
+}
+
+/* WYSIWYG (richText) bodies — restore the structure the global reset strips.
+   Layout/color only; type still comes from .body on the wrapper. */
+.work-detail__section-body p + p {
+    margin-top: 1em;
+}
+
+.work-detail__section-body ul,
+.work-detail__section-body ol {
+    margin: 0.5em 0;
+    padding-left: 1.4em;
+}
+
+.work-detail__section-body ul {
+    list-style: disc;
+}
+
+.work-detail__section-body ol {
+    list-style: decimal;
+}
+
+.work-detail__section-body a {
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+}
+
+
+/* "Big Idea" copy auto-flows across two columns — legacy fallback, used only
+   when the section has no manual right column. */
+.work-detail__section-body--columns {
+    column-count: 2;
+    column-gap: 2.9vw;
+}
+
+/* Manual two-column text section: the CMS "Body — Right Column" field decides
+   exactly which lines sit in each column (line-count balancing by the editor). */
+.work-detail__section-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2.9vw;
+}
+
+/* Fixed two-image grid (each cell optional) */
+.work-detail__grid {
+    display: grid;
+    grid-template-columns: 692fr 413fr;
+    gap: 3.5vw;
+    padding: 3.6vw 3.5vw 0;
+    align-items: end;
+}
+
+.work-detail__grid-img {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 1;
+    display: block;
+    object-fit: contain;
+}
+
+.work-detail__grid .work-detail__grid-img:last-child {
+    max-height: 70%;
+}
+
+/* Wrapping image gallery — 4 per row, editors can add any number of images. */
+.work-detail__gallery {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5vw;
+    padding: 3.6vw 4.5vw 0;
+}
+
+.work-detail__gallery-img {
+    width: 100%;
+    aspect-ratio: 1;
+    display: block;
+    object-fit: contain;
+}
+
+/* Awards strip at the bottom of the inner page — image, award name underneath.
+   Typography from .body; these rules only do layout. */
+.work-detail__awards {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2vw;
+    padding: 3.6vw 4.5vw 0;
+}
+
+.work-detail__awards-list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5vw;
+}
+
+/* Column count follows the award count: 4 by design, but a 5th or 6th award
+   joins the same row instead of wrapping; only past 6 does a second row start.
+   Desktop-only — mobile keeps its 2-column grid. */
+@media (min-width: 769px) {
+    .work-detail__awards-list:has(> :nth-child(5)) {
+        grid-template-columns: repeat(5, 1fr);
+    }
+
+    .work-detail__awards-list:has(> :nth-child(6)) {
+        grid-template-columns: repeat(6, 1fr);
+    }
+}
+
+.work-detail__award {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8vw;
+}
+
+.work-detail__award-img {
+    width: 100%;
+    aspect-ratio: 1;
+    display: block;
+    object-fit: contain;
+}
+
+/* Full-width image at the very bottom of the inner page */
+.work-detail__footer-media {
+    margin-top: 4vw;
+}
+
+/* Inline video block — full-viewport-height frame; player fills it.
+   Same element styles both the <video> (direct files) and the YouTube iframe. */
+.work-detail__video {
+    padding: 3.6vw 4.5vw 0;
+    height: 100vh;
+}
+
+.work-detail__video-player {
+    width: 100%;
+    height: 100%;
+    display: block;
+    border: 0;
+    object-fit: cover;
+}
+
+.text-highlight {
+    font-family: var(--serif);
+    display: inline-block;
+    background: #ffffff;
+    color: #000000 !important;
+    padding: 0 0.1em;
+    line-height: 1;
+}
+
+.services-list {
+    list-style: none;
+}
+
+.service {
+    border-top: 1px solid rgba(255, 255, 255, 0.25);
+
+    &:last-child {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+    }
+}
+
+.service__row {
+    display: flex;
+    align-items: flex-start;
+    gap: 2vw;
+    width: 100%;
+    padding-block: 1.458vw;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: inherit;
+    text-align: left;
+    font-family: inherit;
+}
+
+.service__index {
+    width: 2.5vw;
+    flex-shrink: 0;
+    /* font-family: var(--amplitude-condensed);
+  font-size: 0.833vw;
+  letter-spacing: 0.05em; */
+    padding-top: 0.6em;
+}
+
+.service__title {
+    width: 40.681vw;
+    flex-shrink: 0;
+    margin: 0;
+    padding-left: 16vw;
+}
+
+.service__copy-slot {
+    flex: 1;
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.5s cubic-bezier(0.6, 0, 0.3, 1);
+}
+
+.service.is-open .service__copy-slot {
+    grid-template-rows: 1fr;
+}
+
+.service__copy-content {
+    overflow: hidden;
+    min-height: 0;
+}
+
+.service__copy {
+    width: 25vw;
+    margin-left: auto;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.service__copy .line {
+    display: block;
+    overflow: hidden;
+    line-height: 1.35;
+}
+
+.service__toggle {
+    position: relative;
+    width: 2.292vw;
+    height: 2.292vw;
+    background: var(--red);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: white;
+    transition: background 0.35s ease;
+}
+
+/* Both icons are stacked and cross-faded with a rotation, instead of morphing
+   one path via the CSS `d` property — Safari doesn't support `d` in CSS. */
+.service__toggle-icon {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: 45%;
+    height: 45%;
+    transition:
+        opacity 0.4s cubic-bezier(0.65, 0, 0.35, 1),
+        transform 0.4s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.service__toggle-icon--arrow {
+    opacity: 0;
+    transform: rotate(-90deg);
+}
+
+.service.is-open .service__toggle-icon--plus {
+    opacity: 0;
+    transform: rotate(90deg);
+}
+
+.service.is-open .service__toggle-icon--arrow {
+    opacity: 1;
+    transform: rotate(0deg);
+}
+
+section.what-we-do {
+    position: relative;
+    z-index: 1;
+    padding-inline: var(--sidepadding-xm);
+    padding-block: 5.556vw;
+    isolation: isolate;
+
+    & .wrapper {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        gap: 10.417vw;
+
+        & .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+
+            & .left {
+                display: flex;
+                flex-direction: column;
+                gap: 1.2em;
+
+                & .h2 {
+                    width: 63.292vw;
+
+                    & span {
+                        display: inline-block;
+                        margin-inline: 0.3em;
+                        vertical-align: middle;
+                        line-height: 0;
+
+                        &::before {
+                            content: '[';
+                            margin-right: 0.15em;
+                        }
+
+                        &::after {
+                            content: ']';
+                            margin-left: 0.15em;
+                        }
+
+                        & img {
+                            width: 2em;
+                            height: 0.81em;
+                            object-fit: contain;
+                            display: inline-block;
+                            vertical-align: middle;
+                        }
+                    }
+                }
+            }
+
+            & .right {
+                align-self: flex-start;
+                margin-top: 2.9vw;
+
+                & .video-popup-wrapper {
+                    position: relative;
+                    width: 26.319vw;
+                    height: 16.111vw;
+                    overflow: hidden;
+
+                    & img,
+                    & video {
+                        position: absolute;
+                        inset: 0;
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                    }
+
+                    & .custom-button {
+                        position: absolute;
+                        bottom: 1em;
+                        right: 1em;
+                    }
+                }
+            }
+        }
+    }
+}
+
+section.pillars-section {
+    position: relative;
+    z-index: 2;
+    background: var(--red);
+    color: white;
+    padding-inline: var(--sidepadding-xm);
+    padding-block: 5.556vw;
+    overflow: hidden;
+    isolation: isolate;
+
+    & > h3 {
+        margin-bottom: 30px;
+    }
+}
+
+section.pillars-section .wrapper {
+    position: relative;
+    z-index: 2;
+}
+
+.pillars {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+}
+
+.pillar {
+    display: flex;
+    /* Anchor the line + copy to the FIRST line of the label (not the vertical
+       centre of the row) — with a two-line label (last pillar) centring drifts
+       everything down to the middle of both lines. */
+    align-items: flex-start;
+    gap: 2.083vw;
+    opacity: 0.35;
+    transition: opacity 0.35s ease;
+    cursor: pointer;
+}
+
+.pillar .pillar__label {
+    flex-shrink: 0;
+    white-space: pre-line;
+}
+
+.pillar .pillar__line {
+    flex: 1;
+    height: 1px;
+    background: currentColor;
+    /* Centre the rule on the first label line (.h1 = 6.944vw, line-height 1). */
+    margin-top: 3.472vw;
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 0.65s cubic-bezier(0.6, 0, 0.3, 1);
+}
+
+.pillar .pillar__copy {
+    width: 29.75vw;
+    flex-shrink: 0;
+    text-transform: uppercase;
+    /* Span exactly one label line and centre the copy inside it, whatever its
+       line count — keeps the copy on-centre with the first label line. */
+    min-height: 6.944vw;
+    display: flex;
+    align-items: center;
+}
+
+.pillar .pillar__copy-inner {
+    display: block;
+}
+
+.pillar .pillar__copy .line {
+    display: block;
+    overflow: hidden;
+    line-height: 1.28;
+}
+
+.pillar.is-active {
+    opacity: 1;
+}
+
+.pillar.is-active .pillar__line {
+    transform: scaleX(1);
+}
+
+/* Logo Carousel */
+.logo-carousel {
+    position: relative;
+    isolation: isolate;
+    background: #000;
+    padding: 7.78vw var(--sidepadding-xs) 4vw var(--sidepadding-xs);
+    overflow: hidden;
+}
+
+.logo-carousel-wrapper {
+    position: relative;
+    z-index: 2;
+}
+
+.logo-carousel .carousel-header .logo-carousel__h4 {
+    color: #fff;
+    text-align: center;
+    font-family: var(--amplitude-condensed);
+    font-size: 1.67vw;
+    font-weight: 700;
+    line-height: 1.67vw;
+    letter-spacing: -0.03vw;
+    text-transform: uppercase;
+}
+
+.logo-carousel .carousel-container {
+    width: 100%;
+    margin-top: 2.64vw;
+    overflow: hidden;
+}
+
+.logo-carousel .carousel-track {
+    display: flex;
+    gap: 2.5vw;
+    will-change: transform;
+}
+
+.logo-carousel .carousel-item {
+    flex-shrink: 0;
+    width: 14.127vw;
+    height: 14.127vw;
+    border-radius: 50%;
+    background: #ffffff;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+}
+
+.logo-carousel .carousel-item img {
+    width: 70%;
+    height: 70%;
+    object-fit: contain;
+    display: block;
+}
+
+/* ── Our Story — top hero ───────────────────────────────────────────────
+   178px top offset (→ 12.361vw) and 1034px tall (→ 71.806vw) on the 1440 base.
+   The image is pinned full-width at the bottom; JS transforms it on scroll. */
+.story-hero {
+    position: relative;
+    height: 71.806vw;
+    padding: 12.361vw var(--sidepadding-xs) 0 var(--sidepadding-xs);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    color: #ffffff;
+
+    & > .h1,.breadcrumb {
+        padding-left: var(--sidepadding-xm);
+    }
+}
+
+/* Lines stack in a flex column; each line masks-up via .line / .line-inner. */
+.story-hero__title-inner {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5vw;
+}
+
+/* Keep the heading + breadcrumb above the image. */
+.story-hero__title,
+.story-hero .breadcrumb {
+    position: relative;
+    z-index: 2;
+}
+
+/* Full-bleed image pinned to the bottom; transform-origin centre so the
+   scroll-driven scale grows from the middle. */
+.story-hero__media {
+    position: relative;
+    z-index: 1; /* behind the heading/breadcrumb (z-index 2) */
+    margin-top: auto;
+    margin-left: calc(-1 * var(--sidepadding-xs));
+    width: 100vw;
+    height: 42.042vw; /* 519px @1440 */
+    transform-origin: center center;
+    will-change: transform;
+}
+
+.story-hero__media img {
+    width: 100%;
+    height: 100%;
+    object-position: 0% 29%;
+    object-fit: cover;
+    display: block;
+}
+
+/* ── Our Story — section 1 ──────────────────────────────────────────────
+   Dark section: transparent over the site's black body + grain, white text.
+   Typography comes from the global .h3 / .body classes; these rules only do
+   layout + color. */
+.our-story {
+    position: relative;
+    background: transparent;
+    color: #ffffff;
+    /* No bottom padding — the gap to section 2 is owned by .our-difference's
+       top padding (161px → 11.181vw @1440). */
+    padding: 9.72vw var(--sidepadding-xm) 0 var(--sidepadding-xm);
+    /* Clip only sideways: the 112%-wide tilted marquee must not cause page
+       horizontal scroll, but its rotated corners may bleed vertically. */
+    overflow-x: clip;
+}
+
+/* One top-aligned row: title on the left, the two body copies on the right. */
+.our-story__intro {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 7vw;
+}
+
+.our-story__title {
+    max-width: 47vw;
+    min-width: 26vw;
+}
+
+.our-story__copy {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2vw;
+}
+
+/* Angled image marquee. Sits 85.87px (→ 5.963vw @1440) below the top copy.
+   Reuses the homepage carousel scroll mechanism; the JS translates the track. */
+.our-story__marquee {
+    margin-top: 5.963vw;
+    width: 112%;
+    margin-left: -6%;
+    transform: rotate(4deg);
+    transform-origin: center;
+}
+
+.our-story__track {
+    display: flex;
+    gap: 2.083vw; /* 30px @1440 */
+    will-change: transform;
+}
+
+.our-story__slide {
+    flex-shrink: 0;
+    width: 45.634vw; /* 657.134px @1440 */
+    height: 24.378vw; /* 351.05px @1440 */
+    overflow: hidden;
+}
+
+.our-story__slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* ── Our Story — section 2: "What makes us different" ───────────────────
+   Typography from .h2 / .h3 / .body; these rules only do layout + color. */
+.our-difference {
+    position: relative;
+    background: transparent;
+    color: #ffffff;
+    /* Top padding = the 161px gap from section 1 (→ 11.181vw @1440).
+       Medium side padding (--sidepadding-xm). */
+    padding: 11.181vw var(--sidepadding-xm) 7vw var(--sidepadding-xm);
+    overflow: hidden;
+}
+
+.our-difference__title {
+    margin-bottom: 3.5vw;
+    /* Centred like the homepage section headings; the scroll-join spread stays
+       symmetric around the centre. */
+    text-align: center;
+}
+
+/* Each word translates on scroll (see useScrollJoin), same as the homepage
+   section headings; inline-block so the transform takes. */
+.our-difference__word {
+    display: inline-block;
+    will-change: transform;
+}
+
+.our-difference__cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.25vw; /* 18px @1440 */
+}
+
+.our-difference__card {
+    background: var(--red);
+    color: #ffffff;
+    height: 28.62vw; /* 383.326px @1440 */
+    padding: 1.94vw 1.39vw;
+    display: flex;
+    gap: 4vw;
+    flex-direction: column;
+
+    & h3 {
+        min-height: 6vw;
+    }
+}
+
+
+/* ── Our Story page — mobile ────────────────────────────────────────────
+   The three bespoke sections are laid out at desktop vw proportions; reflow
+   them for narrow screens. (The cloned CTA / form / footer keep their own
+   existing mobile styles.) */
+@media (max-width: 768px) {
+    /* Top hero — image stays full-width at the bottom. The hero animations are
+       disabled on mobile (see StoryHero.tsx), so reveal the typewriter that's
+       otherwise hidden by its initial clip-path. */
+    .story-hero {
+        height: auto;
+        padding: 32vw 9vw 0 9vw;
+    }
+
+    .story-hero .typewriter {
+        clip-path: none;
+    }
+
+    /* Client-requested arrangement: the heading flows as one sentence
+       ("WE TELL STORIES FOR A LIVING. THIS ONE'S OURS.") wrapping naturally,
+       highlight inline — instead of the desktop's three stacked mask lines.
+       Safe because the mask/typewriter animations are disabled on mobile. */
+    /* h1-qualified so it out-specifies the master mobile .h1 rule, which
+       comes later in the file and would otherwise win at 9vw. */
+    h1.story-hero__title {
+        font-size: 9.5vw; /* standard mobile title size */
+        /* Breathing room between the wrapped lines (the heading flows as one
+           sentence on mobile, so line-height is what spaces the rows). */
+        line-height: 1.35;
+    }
+
+    .story-hero__title-inner {
+        display: inline;
+    }
+
+    .story-hero__title .line,
+    .story-hero__title .line-inner,
+    .story-hero__title .typewriter {
+        display: inline;
+    }
+
+    /* JSX strips the whitespace between the line spans — restore it. */
+    .story-hero__title .line::after {
+        content: " ";
+    }
+
+    /* The heading + breadcrumb carry an extra desktop indent
+       (--sidepadding-xm) that doesn't match section 1's caption below the
+       image — drop it so all the left edges line up at the 9vw padding. */
+    .story-hero > .h1,
+    .story-hero .breadcrumb {
+        padding-left: 0;
+    }
+
+    .story-hero__title {
+        max-width: 100%;
+    }
+
+    .story-hero__title-inner {
+        gap: 1.5vw;
+    }
+
+    .story-hero__media {
+        margin-left: -9vw;
+        height: 72vw;
+        margin-top: 6vw;
+    }
+
+    /* Section 1 — stack title + copy full width, single-column copy. */
+    .our-story {
+        padding: 26vw 9vw 0 9vw;
+    }
+
+    .our-story__intro {
+        flex-direction: column;
+        gap: unset;
+    }
+
+    .our-story__title {
+        max-width: 100%;
+    }
+
+    .our-story__copy {
+        align-self: stretch;
+        width: 100%;
+        grid-template-columns: 1fr;
+        gap: 6vw;
+        margin-top: 7vw;
+    }
+
+    /* More air between the copy and the angled strip; the space below it is
+       balanced by the reduced .our-difference top padding. */
+    .our-story__marquee {
+        margin-top: 24vw;
+    }
+
+    .our-story__slide {
+        width: 72vw;
+        height: 42vw;
+    }
+
+    .our-story__track {
+        gap: 4vw;
+    }
+
+    
+
+    /* Section 2 — single-column cards, content-height. */
+    .our-difference {
+        padding: 18vw 9vw 10vw 9vw;
+    }
+
+    /* Sized so the one-line title spans roughly the red cards' full width. */
+    .our-difference__title {
+        font-size: 8.333445vw;
+        margin-bottom: 8vw;
+    }
+
+    .our-difference__cards {
+        grid-template-columns: 1fr;
+        gap: 4vw;
+    }
+
+    .our-difference__card {
+        height: auto;
+        padding: 8vw 7vw;
+    }
+
+    .our-difference__card-title {
+        margin-bottom: 6vw;
+    }
+}
+
+/* Footer */
+.custom-footer {
+    background-color: var(--red);
+    color: white;
+    padding: 3.89vw var(--sidepadding-xm) 0.5vw var(--sidepadding-xm);
+    font-family: var(--amplitude-condensed);
+    font-size: 0.97vw;
+    font-weight: 500;
+    line-height: 1.25vw;
+    letter-spacing: 0;
+    text-transform: uppercase;
+}
+
+.custom-footer .footer-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.custom-footer .footer-column-left {
+    width: 17.639vw;
+}
+
+.custom-footer .footer-location {
+    margin-bottom: 1.94vw;
+}
+
+.custom-footer .footer-directory {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.custom-footer .footer-directory p {
+    margin-bottom: 0.69vw;
+}
+
+.custom-footer .footer-directory a {
+    text-decoration: none;
+    color: white;
+}
+
+.custom-footer .footer-column-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.custom-footer .footer-socmed-excerpt p {
+    margin-bottom: 0.69vw;
+}
+
+.custom-footer .footer-socmed {
+    display: flex;
+    gap: 10px;
+}
+
+.custom-footer .footer-socmed a {
+    padding: 0.5vw;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.custom-footer .footer-socmed img {
+    width: 2.99vw;
+    height: 2.99vw;
+}
+
+.custom-footer .footer-bottom {
+    margin-top: 2vw;
+}
+
+.custom-footer .footer-bottom-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.custom-footer .footer-bottom-top img {
+    opacity: 0;
+    height: auto;
+    width: 6vw;
+}
+
+.custom-footer .footer-bottom-bottom {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    overflow: hidden;
+}
+
+.custom-footer .footer-bottom-bottom p {
+    text-align: center;
+    white-space: nowrap;
+    max-width: 100%;
+    font-family: var(--amplitude-condensed);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 6.2vw;
+    line-height: 6.78vw;
+    letter-spacing: clamp(-1px, -0.32vw, -5px);
+}
+
+/* Each word translates on scroll (see useScrollJoin); inline-block so the
+   transform takes, will-change to keep the scrub smooth. */
+.projects-heading__word,
+.services-heading__word {
+    display: inline-block;
+    will-change: transform;
+}
+
+section.projects {
+    width: 100%;
+    height: 100%;
+    min-height: 100lvh;
+    position: relative;
+    /* Sits above the global .grain-effect overlay (z-index 3) and carries its
+       own weaker grain instead — full-strength static reads too noisy over the
+       project thumbnails. */
+    z-index: 4;
+    background: #000;
+    color: white;
+    overflow: hidden;
+    isolation: isolate;
+
+    &::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 3;
+        opacity: 0.03;
+        pointer-events: none;
+        background-image: url("/tv-static.gif");
+        background-position: 0 0;
+        background-size: auto;
+    }
+
+    & .h1 {
+        margin-inline: auto;
+        width: fit-content;
+        margin-bottom: 0.5em;
+    }
+
+    & .wrapper {
+        width: 100%;
+        min-height: 95lvh;
+        position: relative;
+
+        & .video-wrapper {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+
+            &::before {
+                content: "";
+                position: absolute;
+                inset: 0;
+                z-index: 1;
+                pointer-events: none;
+                background: radial-gradient(
+                    43.59% 45.04% at 50% 50%,
+                    rgba(0, 0, 0, 0) 0%,
+                    #000 100%
+                );
+            }
+
+            & video {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                position: absolute;
+                inset: 0;
+            }
+
+            & .video-bg__image {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                position: absolute;
+                inset: 0;
+                /* B&W with soft tonation — the ::before radial fade above
+                   supplies the black vignette on top. */
+                filter: grayscale(1) brightness(0.75) contrast(0.85);
+            }
+        }
+
+        & .project-grid {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            display: grid;
+            padding-inline: var(--sidepadding-xm);
+            grid-template-columns: repeat(3, 1fr);
+            row-gap: 5.556vw;
+            column-gap: 10vw;
+            min-height: 48vw;
+
+            & .project {
+                display: flex;
+                flex-direction: column;
+                gap: 0.5em;
+
+                & .title-wrapper {
+                    display: flex;
+                    justify-content: space-between;
+                    min-height: 2.5vw;
+
+                    & > p {
+                        margin-top: auto;
+                    }
+                    
+                }
+
+                & .project-image {
+                    display: block;
+                    position: relative;
+                    width: 100%;
+                    height: 13.056vw;
+                    border: 0.5px solid rgba(255, 255, 255, 0.35);
+                    overflow: hidden;
+                }
+
+                & .project-image img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    display: block;
+                }
+            }
+        }
+    }
+}
+
+.project-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1vw;
+    align-items: flex-start;
+    color: #ffffff;
+    opacity: 0;
+    transition: opacity 0.35s cubic-bezier(0.6, 0, 0.3, 1);
+    min-height: 23vw;
+}
+
+.project-info.is-visible {
+    opacity: 1;
+}
+
+.project-info__label {
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.project-info__copy {
+    text-transform: uppercase;
+    line-height: 1.3;
+}
+
+.project-info__tags {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5vw;
+    margin: 0.2vw 0 0;
+    padding: 0;
+}
+
+.project-info__tag {
+    font-family: var(--inter);
+    font-size: 0.83vw;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    padding: 0.45vw 1vw;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.12);
+    color: #ffffff;
+    white-space: nowrap;
+}
+
+.project-info__cta {
+    margin-top: 0.5vw;
+}
+
+.video-popup-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 999999999999;
+    background: rgba(0, 0, 0, 0.85);
+    display: grid;
+    place-items: center;
+    padding: 4vw;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+}
+
+.video-popup-player {
+    width: min(100%, 1280px);
+    max-height: 80vh;
+    aspect-ratio: 16 / 9;
+    background: #000;
+    display: block;
+    outline: none;
+}
+
+.video-popup-close {
+    position: absolute;
+    top: 2vw;
+    right: 2vw;
+    width: 2.8vw;
+    height: 2.8vw;
+    min-width: 44px;
+    min-height: 44px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    background: transparent;
+    color: white;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.video-popup-close:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: white;
+}
+
+.video-popup-close svg {
+    width: 45%;
+    height: 45%;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    fill: none;
+}
+
+/* ── Awards section ──────────────────────────────────────────────── */
+section.awards {
+    position: relative;
+    z-index: 1;
+    background: #000;
+    color: white;
+    padding-inline: var(--sidepadding-xm);
+    padding-top: 5.556vw;
+    padding-bottom: 11.111vw;
+    overflow: hidden;
+}
+
+.awards__inner {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 4.167vw;
+}
+
+.awards__heading {
+    padding-inline: 19.375vw;
+    display: flex;
+    flex-direction: column;
+}
+
+.awards__heading-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+
+    .text-highlight {
+        padding: 0 1em;
+    }
+}
+
+.awards__title {
+    line-height: 1;
+}
+
+.awards__heading-bottom {
+    display: flex;
+    align-items: flex-end;
+    /* No flex-wrap: the heading box has 19.375vw side padding and the
+       "& RECOGNITIONS" line is MEANT to overflow it to the right — wrapping
+       here shoves the phrase (or just the "&") onto its own row. */
+    gap: 2.5vw;
+}
+
+.awards__caption {
+    flex-shrink: 0;
+    text-transform: uppercase;
+    white-space: nowrap;
+    text-align: right;
+    margin-bottom: 1.2vw;
+}
+
+.awards__rec {
+    flex: 1;
+    line-height: 1;
+    /* One unbreakable line — overflowing the padded heading box is the design. */
+    white-space: nowrap;
+    font-weight: 700;
+    font-size: 8.333vw;
+    text-align: right;
+}
+
+/* ── Awards horizontal auto-scroll slider ────────────────────────── */
+/* Bleeds past the section's side padding so the marquee runs edge-to-edge. */
+.awards-slider-wrapper {
+    position: relative;
+    margin-inline: calc(-1 * var(--sidepadding-xm));
+}
+
+.awards-slider .splide__track {
+    overflow: hidden;
+}
+
+.awards-slider__slide {
+    cursor: default;
+}
+
+.awards-slider__img {
+    width: 100%;
+    aspect-ratio: 287 / 400;
+    object-fit: contain;
+    display: block;
+}
+
+/* ── Impact CTA section ──────────────────────────────────────────── */
+.impact-cta {
+    position: relative;
+    color: white;
+    padding-inline: 5.726vw;
+    padding-block: 5.95vw 3.995vw;
+    overflow: hidden;
+    isolation: isolate;
+    cursor: none;
+}
+
+.impact-cta a,
+.impact-cta button {
+    cursor: pointer;
+}
+
+.impact-cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 50;
+    pointer-events: none;
+    will-change: transform;
+}
+
+.impact-cursor__inner {
+    width: 3.6vw;
+    height: 3.6vw;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    display: grid;
+    place-items: center;
+    transform: translate(-50%, -50%) scale(0.5);
+    opacity: 0;
+    transition:
+        opacity 0.35s ease,
+        transform 0.55s cubic-bezier(0.6, 0, 0.3, 1);
+    color: #ffffff;
+}
+
+.impact-cursor__inner.is-active {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.impact-cursor__label {
+    font-family: var(--amplitude-condensed);
+    font-size: 0.625vw;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+}
+
+.impact-cta::after {
+    z-index: 4;
+}
+
+.impact-cta__inner {
+    position: relative;
+    z-index: 3;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1vw;
+    text-align: center;
+    align-items: flex-end;
+}
+
+.impact-cta__inner a,
+.impact-cta__inner button {
+    pointer-events: auto;
+}
+
+.impact-cta__top {
+    gap: 1vw;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: center;
+    margin-right: 6vw;
+
+    .custom-button {
+        align-self: flex-end;
+        margin-bottom: 2.1vw;
+    }
+
+    & .body {
+        text-align: left !important;
+    }
+}
+
+.impact-cta__heading {
+    text-transform: uppercase;
+    color: white;
+    margin: 0;
+    line-height: 0.7;
+}
+
+.impact-cta__bottom {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2.5vw;
+    flex-wrap: wrap;
+    margin-right: 27.5vw;
+
+    & .body {
+        text-align: start !important;
+        align-self: flex-start;
+        margin-top: 1vw;
+    }
+}
+
+.impact-cta__sub {
+    font-family: var(--amplitude-condensed);
+    font-size: 0.85vw;
+    letter-spacing: 0.05em;
+    line-height: 1.5;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.85);
+    margin: 0;
+    text-align: left;
+}
+
+.impact-cta__impact {
+    display: inline-block;
+    font-family: var(--serif) !important;
+    color: #000000;
+    font-weight: 300;
+    background: white;
+    padding: 0.2vw 1vw 0.4vw;
+}
+
+/* ── Image trail ─────────────────────────────────────────────────── */
+.image-trail {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: auto;
+    overflow: hidden;
+}
+
+.image-trail .content__img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 17.083vw;
+    height: 8.611vw;
+    pointer-events: none;
+    opacity: 0;
+    overflow: hidden;
+    will-change: transform, opacity;
+}
+
+.image-trail .content__img-inner {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: 50% 50%;
+}
+
+/* ── Contact section ─────────────────────────────────────────────── */
+.contact-section {
+    position: relative;
+    background: #000000;
+    color: #ffffff;
+    padding-inline: 6.736vw;
+    padding-block: 6.944vw;
+    padding-top: 0;
+    overflow: hidden;
+    isolation: isolate;
+}
+
+.contact-section::after {
+    z-index: 1;
+}
+
+.contact-section__inner {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    gap: 3.5vw;
+}
+
+.contact-section__head {
+    display: flex;
+    flex-direction: column;
+    gap: 1vw;
+}
+
+.contact-section__head .subhead {
+    color: var(--red);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.contact-section__head .h2 {
+    color: #ffffff;
+}
+
+.contact-form {
+    width: 100%;
+    max-width: 56vw;
+    margin-inline: auto;
+}
+
+.contact-form__grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25vw;
+}
+
+.contact-form__field {
+    flex: 1 1 100%;
+    position: relative;
+}
+
+.contact-form__field--half {
+    flex: 1 1 calc(50% - 0.625vw);
+}
+
+.contact-form__input,
+.contact-form__textarea,
+.contact-form__select {
+    width: 100%;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.55);
+    color: #ffffff;
+    font-family: var(--inter);
+    font-size: 0.833vw;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 1.15vw 1.25vw;
+    transition:
+        border-color 0.35s ease,
+        color 0.35s ease;
+}
+
+.contact-form__input::placeholder,
+.contact-form__textarea::placeholder {
+    color: #ffffff;
+}
+
+.contact-form__input:focus,
+.contact-form__textarea:focus,
+.contact-form__select:focus {
+    outline: none;
+    border-color: var(--red);
+}
+
+.contact-form__textarea {
+    min-height: 9vw;
+    resize: vertical;
+}
+
+.contact-form__select-wrap {
+    position: relative;
+}
+
+.contact-form__select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
+    padding-right: 3vw;
+}
+
+.contact-form__select option {
+    background: #111111;
+    color: #ffffff;
+}
+
+.contact-form__chevron {
+    position: absolute;
+    right: 1.25vw;
+    top: 50%;
+    width: 1.2vw;
+    height: 1.2vw;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: #ffffff;
+}
+
+.contact-form__error {
+    margin-top: 1vw;
+    font-family: var(--inter);
+    font-size: 0.78vw;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--red);
+}
+
+/* Appearance comes from the global .custom-button; this only adds spacing + disabled state. */
+.contact-form__submit {
+    margin-top: 1.75vw;
+}
+
+.contact-form__submit:disabled {
+    opacity: 0.6;
+    cursor: default;
+}
+
+.contact-form__confirmation {
+    font-family: var(--amplitude-condensed);
+    font-size: 1.6vw;
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    color: #ffffff;
+    max-width: 40vw;
+}
+
+@media (max-width: 768px) {
+    .contact-section {
+        padding-inline: var(--sidepadding-xm);
+        padding-block: 10vw 14vw;
+    }
+
+    .contact-form {
+        max-width: 100%;
+    }
+
+    .contact-form__field--half {
+        flex: 1 1 100%;
+    }
+
+    .contact-form__input,
+    .contact-form__textarea,
+    .contact-form__select {
+        font-size: 3.6vw;
+        padding: 3.6vw 4vw;
+    }
+
+    .contact-form__chevron {
+        width: 5vw;
+        height: 5vw;
+        right: 4vw;
+    }
+
+    .contact-form__confirmation {
+        font-size: 6vw;
+        max-width: 100%;
+    }
+
+    .contact-form__error {
+        font-size: 3.2vw;
+    }
+}
+
+/* ── Awards page (/awards) ───────────────────────────────────────── */
+.awards-page {
+    position: relative;
+    background: #000000;
+    color: #ffffff;
+    padding-inline: var(--sidepadding-xs);
+    padding-top: 7.778vw;
+    padding-bottom: 2.222vw;
+    overflow: hidden;
+    isolation: isolate;
+}
+
+.awards-page__head {
+    position: relative;
+    z-index: 2;
+    margin-bottom: 5vw;
+}
+
+.awards-page__head .breadcrumb {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+/* Banner heading — a clone of the home awards__heading: AWARDS on the left,
+   then the caption + giant "& RECOGNITIONS" sharing the row below. */
+.awards-page__banner {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5vw;
+    padding-inline: 15vw;
+}
+
+.awards-page__title {
+    line-height: 1;
+}
+
+.awards-page__title .text-highlight {
+    padding: 0 1em;
+}
+
+.awards-page__banner-bottom {
+    display: flex;
+    align-items: flex-end;
+    /* No flex-wrap — same intended right-overflow as .awards__heading-bottom. */
+    gap: 2.5vw;
+}
+
+.awards-page__caption {
+    flex-shrink: 0;
+    width: 17vw;
+    text-transform: uppercase;
+    text-align: right;
+    margin-bottom: 1.2vw;
+}
+
+.awards-page__rec {
+    flex: 1;
+    line-height: 1;
+    font-weight: 700;
+    font-size: 8.333vw;
+    /* One unbreakable line — overflowing the padded banner box is the design. */
+    white-space: nowrap;
+    text-align: right;
+}
+
+.awards-page__list {
+    position: relative;
+    z-index: 2;
+}
+
+/* Each year group lays out as [year] [sticky image] [rows]. */
+.awards-page__group {
+    display: grid;
+    grid-template-columns: 3vw 26vw 1fr;
+    column-gap: 1.5vw;
+    align-items: start;
+    padding-block: 0.833vw;
+    border-top: 1px solid rgba(255, 255, 255, 0.14);
+    min-height: 11vw;
+}
+
+/* .awards-page__group:last-child {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+} */
+
+.awards-page__year {
+    grid-column: 1;
+    font-family: var(--inter);
+    font-size: 0.833vw;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    color: rgba(255, 255, 255, 0.85);
+    padding-top: 1.55vw;
+}
+
+/* Sticky holder — the image stays at the same spot while hovering the
+   group's rows. Empty (but space-reserved) until a row is hovered. */
+.awards-page__media {
+    grid-column: 2;
+    align-self: start;
+    width: 22.736vw;
+    height: 14vw;
+    display: flex;
+    flex-direction: column;
+    gap: 0.556vw;
+}
+
+.awards-page__media-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    animation: awards-img-in 0.35s ease;
+}
+
+@keyframes awards-img-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.awards-page__rows {
+    grid-column: 3;
+    list-style: none;
+}
+
+.awards-page__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 7.6vw;
+    align-items: start;
+    padding-block: 0.833vw;
+    padding-left: 0.347vw;
+    padding-right: 4.5vw;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    cursor: default;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.awards-page__row.is-active {
+    background: #ffffff;
+    color: #000000;
+}
+
+/* Middle column: bold show title (WYSIWYG <strong>) over the bulleted categories. */
+.awards-page__middle p {
+    margin: 0;
+}
+
+.awards-page__middle ul {
+    list-style: disc;
+    margin: 0.35vw 0 0;
+    padding-left: 1.1vw;
+}
+
+/* Right column: the campaign, muted until the row is hovered. */
+.awards-page__right {
+    color: rgba(255, 255, 255, 0.4);
+    transition: color 0.3s ease;
+}
+
+.awards-page__right p {
+    margin: 0;
+}
+
+.awards-page__row.is-active .awards-page__right {
+    color: rgba(0, 0, 0, 0.55);
+}
+
+/* Per-row accordion image — mobile only (desktop shows the shared media box). */
+.awards-page__row-media {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .awards-page {
+        padding-inline: 6.4vw;
+        padding-top: 24vw;
+        padding-bottom: 16vw;
+    }
+
+    .breadcrumb {
+        font-size: 3.2vw;
+        margin-bottom: 4vw;
+    }
+
+    /* Mirror the homepage awards heading: AWARDS + & RECOGNITIONS share the
+       first row (wrap as fallback), caption on its own row below. */
+    /* Mirrors the homepage awards lockup (.awards__title / .awards__rec):
+       same sizes, same staggered stack, same 3vw row gap. */
+    .awards-page__banner {
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: baseline;
+        column-gap: 3vw;
+        row-gap: 3vw;
+        padding-inline: 0;
+        padding-top: 10vw;
+    }
+
+    .awards-page__banner-bottom {
+        display: contents;
+    }
+
+    /* h1-qualified so the font-size out-specifies the master mobile .h1 rule,
+       which comes later in the file and would otherwise win at 9vw. */
+    h1.awards-page__title {
+        order: 1;
+        flex-basis: 100%;
+        font-size: 9.5vw;
+        /* Nudged right toward centre so the AWARDS box sits staggered
+           against & RECOGNITIONS below — same as the homepage. */
+        padding-left: 8vw;
+    }
+
+    .awards-page__title .text-highlight {
+        padding: 0 0.3em;
+    }
+
+    .awards-page__rec {
+        order: 2;
+        flex: none;
+        flex-basis: 100%;
+        font-size: 9vw;
+        text-align: left;
+        /* The stagger — shifted right of AWARDS, per the client mock. */
+        padding-left: 22vw;
+    }
+
+    .awards-page__caption {
+        order: 3;
+        flex-basis: 100%;
+        width: auto;
+        text-align: left;
+        margin-bottom: 0;
+    }
+
+    .awards-page__head {
+        margin-bottom: 12vw;
+    }
+
+    /* Stack: year on top, image, then rows. */
+    .awards-page__group {
+        grid-template-columns: 1fr;
+        row-gap: 4vw;
+        padding-block: 8vw;
+    }
+
+    .awards-page__year {
+        padding-top: 0;
+        font-size: 3.6vw;
+    }
+
+    /* The shared top image is replaced by the per-row accordion image, so a
+       tapped award reveals its photo right under the row instead of at the
+       top of a long year group. */
+    .awards-page__media {
+        display: none;
+    }
+
+    .awards-page__row.is-active .awards-page__row-media {
+        display: block;
+    }
+
+    .awards-page__row-media img {
+        width: 100%;
+        max-height: 60vw;
+        object-fit: contain;
+        margin-top: 2vw;
+        animation: awards-img-in 0.35s ease;
+    }
+
+    .awards-page__rows {
+        grid-column: 1;
+    }
+
+    .awards-page__row {
+        grid-template-columns: 1fr;
+        row-gap: 1.5vw;
+        padding: 4vw;
+        margin-inline: -4vw;
+    }
+
+    .awards-page__middle,
+    .awards-page__right {
+        font-size: 3.4vw;
+    }
+
+    /* The desktop 1.1vw list indent collapses to ~4px on phones, leaving the
+       disc markers hanging past the row's left edge — restore a real indent. */
+    .awards-page__middle ul {
+        margin-top: 1.5vw;
+        padding-left: 4.5vw;
+    }
+
+    /* A group's last row ended with its own divider right above the next
+       group's border-top — two stacked lines above every year. Drop the row's
+       line so a single rule separates the years, and close the list with one. */
+    .awards-page__row:last-child {
+        border-bottom: none;
+    }
+
+    .awards-page__group:last-child {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+    }
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   MOBILE  (≤ 768px)
+   The whole layout is authored in vw for a ~1440 desktop, so on a phone
+   every size collapses to a few px and the multi-column rows never reflow.
+   Same approach as the .contact-section / .awards-page blocks above: keep
+   vw, bump the global type scale so copy is legible, stack each section's
+   columns to one, and trade the wide vw gutters for --sidepadding-xm.
+   ══════════════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+    /* ── Type scale — the single highest-impact fix ──────────────────── */
+    .h1 {
+        font-size: 9vw;
+        letter-spacing: -0.3vw;
+    }
+
+    .h1-v3 {
+        font-size: 9vw;
+        letter-spacing: -0.25vw;
+    }
+
+    .h2-serif {
+        font-size: 4.5vw;
+        line-height: 1.25;
+    }
+
+    .h2 {
+        font-size: 7vw;
+        letter-spacing: -0.2vw;
+    }
+
+    .h3 {
+        font-size: 5vw;
+    }
+
+    h4,
+    .h4 {
+        font-size: 4.5vw;
+    }
+
+    .body,
+    .subhead {
+        font-size: 3.6vw;
+        line-height: 1.35;
+    }
+
+    /* ── Buttons — bigger tap target, icon-anchored hover wipe ───────── */
+    .custom-button {
+        gap: 4vw;
+        padding: 3vw;
+    }
+
+    .custom-button::before {
+        left: 3vw;
+    }
+
+    /* ── Header ──────────────────────────────────────────────────────── */
+    .site-header .wrapper {
+        padding: 4vw var(--sidepadding-xm);
+        align-items: center;
+    }
+
+    .site-header__logo img {
+        width: 26vw;
+        max-width: 200px;
+    }
+
+    /* Swap the inline nav for the hamburger + drawer on mobile. */
+    .site-header__nav {
+        display: none;
+    }
+
+    .site-header__burger {
+        display: flex;
+    }
+
+    /* ── Hero ────────────────────────────────────────────────────────── */
+    .hero-parent .hero-copy {
+        top: 20vw; /* clear the fixed header */
+        left: var(--sidepadding-xm);
+        right: var(--sidepadding-xm);
+        gap: 3vw;
+    }
+
+    /* The desktop .hero-parent .h2-serif (3.6vw) out-specifies the mobile
+       type scale above, leaving the subtitle unreadably small — re-bump it.
+       Headline scaled up alongside (12vw / 6vw pairing). */
+    .hero-parent .h1-v3 {
+        font-size: 12vw;
+        letter-spacing: -0.33vw;
+    }
+
+    .hero-parent .h2-serif {
+        font-size: 6vw;
+        line-height: 1.25;
+    }
+
+    /* The serif line sits right under the headline; drop the carousel imagery
+       so the two never overlap (the hero clips the shifted canvas bottom). */
+    .hero-parent .cylinder-stage {
+        transform: translateY(20vw);
+    }
+
+    /* ── What we do ──────────────────────────────────────────────────── */
+    section.what-we-do .wrapper {
+        gap: 12vw;
+    }
+
+    section.what-we-do .wrapper .top {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8vw;
+    }
+
+    section.what-we-do .wrapper .top .left .h2 {
+        width: 100%;
+    }
+
+    section.what-we-do .wrapper .top .right {
+        margin-top: 0;
+        align-self: stretch;
+    }
+
+    section.what-we-do .wrapper .top .right .video-popup-wrapper {
+        width: 100%;
+        height: 56vw;
+    }
+
+    /* Show the whole showreel on mobile: drop the forced 16:9 box and let the
+       video letterbox within the viewport instead of being cropped. */
+    .video-popup-player {
+        width: 100%;
+        height: auto;
+        max-height: 80vh;
+        aspect-ratio: auto;
+        object-fit: contain;
+    }
+
+    /* ── Services — stack index/title/toggle, copy drops full-width ──── */
+    section.services {
+        padding-block: 16vw;
+        /* Trade the wide desktop gutters (12.222vw) for the standard mobile
+           side padding so FULL-FLEDGED SERVICES fits on one line at 9.5vw. */
+        padding-inline: var(--sidepadding-xm);
+    }
+
+    .service__row {
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 3vw 4vw;
+        padding-block: 5vw;
+    }
+
+    .service__index {
+        width: auto;
+        padding-top: 0;
+    }
+
+    .service__title {
+        flex: 1;
+        width: auto;
+        padding-left: 0;
+    }
+
+    .service__copy-slot {
+        flex-basis: 100%;
+        order: 3;
+    }
+
+    .service__copy {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .service__toggle {
+        width: 9vw;
+        height: 9vw;
+    }
+
+    /* ── Pillars — label over copy, drop the connector line ──────────── */
+    section.pillars-section {
+        padding-block: 16vw;
+
+        /* As big as the heading can go while both CMS lines ("…INSIGHTS AND" /
+           "CREDIBLE JOURNALISM, WE DELIVER :") still fit the ~88vw content
+           width on one row each — 8vw forced an extra soft-wrap. */
+        & .h3 {
+            font-size: 6.5vw;
+        }
+    }
+
+    .pillar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 3vw;
+        padding-block: 5vw;
+    }
+
+    .pillar .pillar__line {
+        display: none;
+    }
+
+    .pillar .pillar__copy {
+        width: 100%;
+        /* Stacked layout — no label line to centre against. */
+        min-height: 0;
+        display: block;
+    }
+
+    /* Scroll-in reveal (set by Pillars.tsx) — no tap needed to discover the
+       copy; the existing opacity transition does the fade. */
+    .pillar.is-revealed {
+        opacity: 1;
+    }
+
+    /* ── Logo carousel — fewer, larger circles ───────────────────────── */
+    .logo-carousel {
+        padding-top: 18vw;
+    }
+
+    .story-hero__media img {
+        object-position: unset;
+    }
+
+    .logo-carousel .carousel-header .logo-carousel__h4 {
+        font-size: 5vw;
+        line-height: 1.2;
+    }
+
+    .logo-carousel .carousel-track {
+        gap: 5vw;
+    }
+
+    .logo-carousel .carousel-item {
+        width: 34vw;
+        height: 34vw;
+    }
+
+    /* ── Projects — let the hover grid flow as a normal single column ── */
+    section.projects {
+        min-height: 0;
+        padding-block: 16vw;
+    }
+
+    section.projects .h1 {
+        margin-bottom: 8vw;
+    }
+
+    /* Standard homepage-header size — same as .awards__title and the
+       .impact-cta headings, so all four section headers match on mobile.
+       Sized so FULL-FLEDGED SERVICES (the longest header) fits one line.
+       (Later than the mobile .h1 rule on purpose: same specificity, this wins.) */
+    .projects-heading,
+    .services-heading__title {
+        font-size: 9.5vw;
+    }
+
+    section.projects .wrapper {
+        min-height: 0;
+    }
+
+    section.projects .wrapper .project-grid {
+        position: static;
+        grid-template-columns: 1fr;
+        row-gap: 10vw;
+        column-gap: 0;
+        padding-inline: var(--sidepadding-xm);
+    }
+
+    section.projects .wrapper .project-grid .project .project-image {
+        height: 45vw;
+
+        & img {
+            object-fit: contain;
+        }
+    }
+
+    /* hover-only chrome has no place on touch */
+    section.projects .project-grid .empty-div {
+        display: none;
+    }
+
+    .project-info {
+        display: none;
+    }
+
+    /* Mobile replaces the stacked grid with the works-page horizontal peek
+       slider (see MobileProjects in Project.tsx). Same flex layout as the
+       mobile .works-page so the reused works-showcase__* / .works-slider
+       classes order themselves identically: slider, title, tags, CTA. */
+    .projects-mobile {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 7vw;
+        width: 100%;
+    }
+
+    /* ── Awards (home) ───────────────────────────────────────────────── */
+    section.awards {
+        padding-top: 16vw;
+        padding-bottom: 20vw;
+    }
+
+    .awards__inner {
+        gap: 10vw;
+    }
+
+    .awards__heading {
+        padding-inline: 0;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: baseline;
+        column-gap: 3vw;
+        row-gap: 3vw;
+        justify-content: center;
+    }
+
+    /* Flatten the two heading rows so all four items can be reordered and
+       staggered: AWARDS on its own row, & RECOGNITIONS on the next row nudged
+       right, then the caption full-width, then the button. */
+    .awards__heading-top,
+    .awards__heading-bottom {
+        display: contents;
+    }
+
+    .awards__title {
+        order: 1;
+        flex-basis: 100%;
+        /* Standard homepage-header size on mobile (matches projects/services/CTA). */
+        font-size: 9.5vw;
+        /* Nudged right toward centre so the AWARDS box sits staggered
+           against & RECOGNITIONS below. */
+        padding-left: 8vw;
+    }
+
+    .awards__heading-top .text-highlight {
+        padding: 0 0.3em;
+    }
+
+    .awards__rec { order: 2; }
+    .awards__caption { order: 3; }
+    .awards__button { order: 4; }
+
+    .awards__caption {
+        flex-basis: 100%;
+        text-align: left;
+        white-space: normal;
+        margin-bottom: 0;
+        padding-left: 5vw;
+    }
+
+    /* The CMS caption's manual line breaks make short ragged lines on a
+       phone — ignore them so the copy flows across the whole row. */
+    .awards__caption br {
+        display: none;
+    }
+
+    .awards__rec {
+        flex: unset;
+        flex-basis: 100%;
+        font-size: 9vw;
+        text-align: left;
+        /* The stagger — shifted right of AWARDS, per the client mock. */
+        padding-left: 22vw;
+    }
+
+    /* ── Impact CTA — restore the cursor, stack the rows ─────────────── */
+    .impact-cta {
+        cursor: auto;
+        padding-block: 18vw 0;
+        padding-inline: 16vw;
+    }
+
+    /* Wrapping row so LET'S + CONNECT share the first line; the copy takes a
+       full row below them. space-between pins LET'S to the left padding edge
+       (same indent as the copy below) and CONNECT to the right. */
+    .impact-cta__inner {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: baseline;
+        column-gap: 3vw;
+        row-gap: 5vw;
+    }
+
+    /* Standard homepage-header size on mobile ("LET'S CONNECT" still fits). */
+    .impact-cta .h1-v2-sm {
+        font-size: 9.5vw;
+        letter-spacing: -0.5vw;
+    }
+
+    .impact-cta__impact {
+        padding: 0.5vw 2vw 1vw;
+    }
+
+    /* Flatten both rows so the pieces stack as: LET'S → CONNECT → copy
+       (client wants the full heading before the supporting line). */
+    .impact-cta__top,
+    .impact-cta__bottom {
+        display: contents;
+    }
+
+    .impact-cta__heading { order: 1; }
+    .impact-cta__impact { order: 2; }
+
+    .impact-cta__top .body {
+        order: 3;
+        flex-basis: 100%;
+        /* Centred under the heading pair; !important needed to out-rank the
+           desktop left-align rule of the same weight. */
+        text-align: left !important;
+                padding-left: 13px;
+    }
+
+    .impact-cta__bottom .body {
+        order: 3;
+        margin-top: 0;
+    }
+
+    /* ── Footer ──────────────────────────────────────────────────────── */
+    .custom-footer {
+        padding: 14vw var(--sidepadding-xm) 4vw;
+        font-size: 3.6vw;
+        line-height: 1.4;
+    }
+
+    .custom-footer .footer-top {
+        flex-direction: column;
+        gap: 10vw;
+    }
+
+    .custom-footer .footer-column-left {
+        width: 100%;
+    }
+
+    .custom-footer .footer-directory {
+        align-items: flex-start;
+        text-align: left;
+    }
+
+    .custom-footer .footer-column-right {
+        gap: 3vw;
+    }
+
+    .custom-footer .footer-socmed img {
+        width: 8vw;
+        height: 8vw;
+    }
+
+    .custom-footer .footer-bottom {
+        margin-top: 16vw;
+    }
+
+    .custom-footer .footer-bottom-top {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4vw;
+    }
+
+    /* The brand-logo img is a desktop spacer (opacity 0) — on mobile it only
+       adds phantom height above the copyright line. */
+    .custom-footer .footer-bottom-top img {
+        display: none;
+    }
+
+    /* Smaller copyright line, left-aligned with the email below. */
+    .custom-footer .footer-bottom-top p {
+        font-size: 2.6vw;
+    }
+
+    /* Left-align the email so its S lines up with COPYRIGHTS' C (no indent). */
+    .custom-footer .footer-bottom-bottom {
+        justify-content: flex-start;
+    }
+
+    /* Shrink to fit the full email on one line (it's white-space: nowrap and
+       the parent clips overflow). 6.2vw matches the desktop size that fits the
+       same ~88vw content width. */
+    .custom-footer .footer-bottom-bottom p {
+        font-size: 6.2vw;
+        line-height: 1.2;
+        text-align: left;
+    }
+
+    /* ── Work detail (/works/[slug]) ─────────────────────────────────── */
+    .work-detail {
+        padding: 26vw var(--sidepadding-xm) 16vw;
+    }
+
+    .work-detail__breadcrumb {
+        margin: 0 0 6vw;
+    }
+
+    .work-detail__head {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5vw;
+        padding: 0 0 6vw;
+    }
+
+    .work-detail__title {
+        /* Standard mobile title size — long campaign names were eating half
+           the viewport at 13vw (client feedback). */
+        font-size: 9.5vw;
+        letter-spacing: -1px;
+    }
+
+    .work-detail__meta {
+        gap: 3vw;
+    }
+
+    .work-detail__tags {
+        gap: 2vw;
+    }
+
+    .work-detail__tag {
+        padding: 1.5vw 3vw;
+        border-radius: 6vw;
+    }
+
+    .work-detail__img {
+        aspect-ratio: 3 / 2;
+    }
+
+    .work-detail__section {
+        gap: 3vw;
+        padding: 10vw var(--sidepadding-xm) 0;
+    }
+
+    .work-detail__section-body {
+        max-width: 100%;
+    }
+
+    .work-detail__section-body--columns {
+        column-count: 1;
+    }
+
+    /* Manual columns stack on phones — reading order: left column then right. */
+    .work-detail__section-cols {
+        grid-template-columns: 1fr;
+        gap: 3vw;
+    }
+
+    .work-detail__grid {
+        grid-template-columns: 1fr;
+        gap: 4vw;
+        padding: 10vw var(--sidepadding-xm) 0;
+    }
+
+    .work-detail__video {
+        height: 40vh;
+    }
+
+    .work-detail__grid .work-detail__grid-img:last-child {
+        max-height: none;
+    }
+
+    .work-detail__gallery {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 4vw;
+        padding: 10vw var(--sidepadding-xm) 0;
+    }
+
+    .work-detail__awards {
+        gap: 3vw;
+        padding: 10vw var(--sidepadding-xm) 0;
+    }
+
+    .work-detail__awards-list {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 4vw;
+    }
+
+    .work-detail__award {
+        gap: 2vw;
+    }
+
+    .work-detail__footer-media {
+        margin-top: 10vw;
+    }
+}

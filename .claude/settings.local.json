@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash",
+      "PowerShell",
+      "Bash(npm install *)",
+      "Bash(cp /Users/karminglaw/Downloads/StarBrand/Footer/Images/* /Users/karminglaw/Desktop/StarBrandStudio/public/footer/)",
+      "Bash(cp \"/Users/karminglaw/Downloads/StarBrand/Logo Carousel/Images/\"* /Users/karminglaw/Desktop/StarBrandStudio/public/logos/)",
+      "Bash(npm run test:*)",
+      "Bash(ssh sbs-prod *)",
+      "Bash(curl -s --max-time 30 \"https://starbrand.mydemobb.com/api/works?limit=2&depth=0\")"
+    ]
+  }
+}

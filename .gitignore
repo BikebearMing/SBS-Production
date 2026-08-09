@@ -1,0 +1,15 @@
+node_modules/
+.next/
+payload.db
+payload.db-journal
+random.html
+
+# Media binaries are committed and baked into the Docker image (see Dockerfile),
+# so they survive redeploys and host migrations without a persistent volume.
+# (This is a self-hosted Coolify/Docker deploy — no Vercel Blob.)
+.env.local
+.env
+
+# Site backups (scripts/backup.sh) + their config, which holds secrets
+backups/
+scripts/backup.env
