@@ -60,8 +60,8 @@ function MobileWorks({ slides }: { slides: WorksSlide[] }) {
       </nav>
       <div className="works-title">
         <h2 className="h1 amplitude dark">
-          The <br />
-          <span className="text-highlight">Works</span>
+          THE <br />
+          <span className="text-highlight">WORKS</span>
         </h2>
         <p className="body dark">we&rsquo;re proud of</p>
       </div>
