@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
+import { scrollState } from '@/lib/scroll'
 
 const SLIDE_DURATION = 1.0    // seconds for the slide-up transition
 const POST_LOTTIE_HOLD = 0.15 // brief beat after the lottie completes before sliding
@@ -61,6 +62,17 @@ export default function Preloader() {
     const root = rootRef.current
     if (!host || !root) return
 
+    // Restore scrolling and hand Lenis the now-expanded document height. The
+    // ResizeObserver in SmoothScroll catches this too, but only after its
+    // 250ms debounce — do it immediately so the first wheel event is correct.
+    const unlockScroll = () => {
+      document.body.style.overflow = ''
+      scrollState.lenis?.resize()
+    }
+
+    // Locking the body collapses the document to one viewport, so every
+    // measurement Lenis takes while the intro is up reads a near-zero
+    // max-scroll. Always re-measure on the way out (see unlockScroll).
     document.body.style.overflow = 'hidden'
 
     let anim: { destroy: () => void } | null = null
@@ -89,7 +101,7 @@ export default function Preloader() {
             window.dispatchEvent(new Event(PRELOADER_DONE_EVENT))
           },
           onComplete: () => {
-            document.body.style.overflow = ''
+            unlockScroll()
             setRemoved(true)
           },
         })
@@ -99,7 +111,7 @@ export default function Preloader() {
     return () => {
       cancelled = true
       anim?.destroy()
-      document.body.style.overflow = ''
+      unlockScroll()
     }
   }, [shouldPlay])
 

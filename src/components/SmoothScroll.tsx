@@ -42,6 +42,16 @@ export default function SmoothScroll() {
       scrollState.velocity = velocity
     })
 
+    // Lenis's own autoResize watches <html> only, and the preloader collapses
+    // the document to one viewport (`body { overflow: hidden }`) for its first
+    // couple of seconds — so anything that changes the page height while the
+    // intro is up, or after the timed syncs above have run (late images, fonts,
+    // the 3D carousel canvas), leaves Lenis clamped to a stale max-scroll.
+    // Watching <body> too catches every one of those, including the moment the
+    // preloader releases the lock and the document expands again.
+    const ro = new ResizeObserver(() => lenis.resize())
+    ro.observe(document.body)
+
     let rafId = 0
     const raf = (time: number) => {
       lenis.raf(time)
@@ -51,6 +61,7 @@ export default function SmoothScroll() {
 
     return () => {
       cancelAnimationFrame(rafId)
+      ro.disconnect()
       lenis.destroy()
       scrollState.velocity = 0
       scrollState.lenis = null

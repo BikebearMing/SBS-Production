@@ -37,7 +37,11 @@ main.grain-effect {
 
 html,
 body {
-    height: 100%;
+    /* min-height, NOT height: 100%. Lenis auto-resize is a ResizeObserver on
+       <html>; a fixed `height: 100%` pins that box to the viewport so the
+       observer never fires as the page grows, and Lenis keeps a stale (short)
+       max-scroll — you can't reach the bottom. See SmoothScroll.tsx. */
+    min-height: 100%;
     background: #000000;
     color: var(--text);
     font-family: var(--inter);
