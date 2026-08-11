@@ -700,9 +700,10 @@ async function run() {
     confirmationMessage: lexical("Thanks — we've got your enquiry. We'll be in touch shortly."),
     // Notification emails are handled by a custom afterChange hook (see
     // src/forms/contactNotification.ts), driven by the form's "Notification
-    // recipients" field — set that in the admin, not here. The Form Builder's
-    // own `emails` array is left empty on purpose. Re-seeding preserves any
-    // recipients already entered (partial update doesn't touch notificationEmails).
+    // recipients" field — editable in the admin, seeded with the studio inbox
+    // on first create only. The Form Builder's own `emails` array is left empty
+    // on purpose. Re-seeding preserves any recipients already entered (the
+    // update path below doesn't touch notificationEmails).
     emails: [],
     fields: [
       { blockType: 'text', name: 'fullName', label: 'Full Name', required: true, width: 100 },
@@ -741,8 +742,11 @@ async function run() {
     await payload.update({ collection: 'forms', id: existingForm.docs[0].id, data: contactFormData as any })
     console.log('Updated existing contact form.')
   } else {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    await payload.create({ collection: 'forms', data: contactFormData as any })
+    await payload.create({
+      collection: 'forms',
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      data: { ...contactFormData, notificationEmails: 'smgbrandstudio@thestar.com.my' } as any,
+    })
     console.log('Created contact form.')
   }
 

@@ -3,7 +3,6 @@ import { postgresAdapter } from '@payloadcms/db-postgres'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
 import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
-import { resendAdapter } from '@payloadcms/email-resend'
 import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
 import { notificationEmailsField, sendContactNotification } from './src/forms/contactNotification'
 import { Users } from './src/collections/Users'
@@ -20,6 +19,14 @@ import { fileURLToPath } from 'url'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
+
+// SMTP delivery (Google Workspace relay). The relay authorises our server by IP
+// allowlist, so there are normally no credentials — SMTP_USER/SMTP_PASS are
+// applied only if they're set, e.g. if the relay is switched to authenticated
+// mode or a plain Gmail mailbox is used instead.
+const SMTP_HOST = process.env.SMTP_HOST || 'smtp-relay.gmail.com'
+const SMTP_PORT = Number(process.env.SMTP_PORT || 25)
+const EMAIL_FROM_ADDRESS = process.env.EMAIL_FROM || 'smgbrandstudio@thestar.com.my'
 
 export default buildConfig({
   admin: {
@@ -43,37 +50,38 @@ export default buildConfig({
     migrationDir: path.resolve(dirname, 'src/migrations'),
   }),
   secret: process.env.PAYLOAD_SECRET || 'star-brand-studio-local-secret',
-  // Email delivery — Gmail SMTP when SMTP_USER/SMTP_PASS are set, else Resend
-  // when RESEND_API_KEY is set. Without either, Payload falls back to a console
-  // mock so local dev still works.
-  ...(process.env.SMTP_USER && process.env.SMTP_PASS
-    ? {
+  // Email delivery — every form email (contact notifications and any emails
+  // configured on a form in the admin) goes out over SMTP via nodemailer.
+  // Set SMTP_DISABLED=true (see .env.local) to fall back to Payload's console
+  // mock, which is what local dev wants: the relay only accepts allowlisted
+  // server IPs, and outbound port 25 is usually blocked on dev machines.
+  ...(process.env.SMTP_DISABLED === 'true'
+    ? {}
+    : {
         email: nodemailerAdapter({
           defaultFromName: 'Star Brand Studio',
-          // Gmail only honors a From matching the authenticated account (or a
-          // configured "Send mail as" alias) — anything else gets rewritten.
-          defaultFromAddress: process.env.EMAIL_FROM || process.env.SMTP_USER,
+          // The relay only accepts a From within the thestar.com.my domain —
+          // anything else is rejected, so this is not a free-form field.
+          defaultFromAddress: EMAIL_FROM_ADDRESS,
+          // The adapter otherwise opens a test connection when the config is
+          // loaded, which stalls `next build` inside Docker (the build container
+          // can't reach the relay). Send failures are logged by the hook anyway.
+          skipVerify: true,
           transportOptions: {
-            host: process.env.SMTP_HOST || 'smtp.gmail.com',
-            port: Number(process.env.SMTP_PORT || 465),
-            secure: Number(process.env.SMTP_PORT || 465) === 465,
-            auth: {
-              user: process.env.SMTP_USER,
-              pass: process.env.SMTP_PASS,
-            },
+            host: SMTP_HOST,
+            port: SMTP_PORT,
+            // 465 is implicit TLS; 25/587 start plaintext and upgrade via
+            // STARTTLS, which the Google relay supports — require it so
+            // submissions are never sent in the clear.
+            secure: SMTP_PORT === 465,
+            requireTLS: SMTP_PORT !== 465,
+            connectionTimeout: 10_000,
+            ...(process.env.SMTP_USER && process.env.SMTP_PASS
+              ? { auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS } }
+              : {}),
           },
         }),
-      }
-    : process.env.RESEND_API_KEY
-      ? {
-          email: resendAdapter({
-            defaultFromName: 'Star Brand Studio',
-            defaultFromAddress:
-              process.env.EMAIL_FROM || 'onboarding@resend.dev',
-            apiKey: process.env.RESEND_API_KEY,
-          }),
-        }
-      : {}),
+      }),
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },

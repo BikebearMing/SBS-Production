@@ -62,6 +62,16 @@ inline in a section.
   Use `nvm use 22` before running `npm run generate:types`, `npm run seed`, builds, etc.
 - `package.json` has `"type": "module"` — required for Payload's CLI import resolution.
 
+## Security headers
+
+- `next.config.ts` sets the response headers the site is graded on
+  (securityheaders.com A+): CSP, HSTS, X-Frame-Options, X-Content-Type-Options,
+  Referrer-Policy, Permissions-Policy — plus `poweredByHeader: false`. Don't remove them.
+- **Loading a new external origin means updating `cspDirectives` in the same file**, or the
+  browser silently blocks it. Check where the origin actually redirects to: `picsum.photos`
+  and `streamable.com` both 302 to CDN subdomains, and CSP re-checks the redirect target,
+  which is why those entries are wildcards.
+
 ## CMS
 
 - Content is served from Payload at request time (`src/app/(frontend)/page.tsx`).
@@ -69,4 +79,12 @@ inline in a section.
   site never breaks with an empty/unavailable CMS. Preserve that fallback pattern.
 - Re-seed with `npm run seed` (idempotent — media matched by filename, page/footer/form upserted).
 - The contact form uses the Form Builder plugin (`forms` + `form-submissions` collections).
-  Email notifications are intentionally off until SMTP details exist.
+- All form email goes out over SMTP through `@payloadcms/email-nodemailer` — it is the
+  only email adapter; don't add another. It's configured in `payload.config.ts` against the
+  Google Workspace relay (`smtp-relay.gmail.com:25`, STARTTLS) sending as
+  `smgbrandstudio@thestar.com.my`. The relay authorises the server by IP allowlist, so
+  there are no SMTP credentials — deployments need no email env vars. Set
+  `SMTP_DISABLED=true` (already in `.env.local`) for local dev: the relay rejects
+  non-allowlisted IPs, so emails are logged to the console instead.
+- The From address is owned by the adapter's `defaultFromAddress`; never pass a `from` in
+  a `sendEmail` call — the relay rejects senders outside the domain.

@@ -8,16 +8,11 @@ import type { CollectionAfterChangeHook, Field } from 'payload'
  * semicolons or new lines). When a submission is created we render a styled
  * HTML email and send it to every recipient via `payload.sendEmail`.
  *
- * Sending only actually happens when an email adapter is configured in
- * payload.config.ts (Resend, gated behind RESEND_API_KEY). Without it Payload
- * falls back to a console mock, so local dev never breaks.
+ * Delivery goes through the nodemailer adapter configured in payload.config.ts.
+ * The From address is deliberately not set here — the adapter's
+ * defaultFromAddress owns it, because the SMTP relay rejects any other sender.
+ * With SMTP_DISABLED=true Payload uses a console mock, so local dev never breaks.
  */
-
-const FROM =
-  process.env.EMAIL_FROM ||
-  (process.env.SMTP_USER
-    ? `Star Brand Studio <${process.env.SMTP_USER}>`
-    : 'Star Brand Studio <onboarding@resend.dev>')
 
 // Brand palette (kept here because emails need inline styles, not CSS classes).
 const BRAND_RED = '#D8232A'
@@ -237,7 +232,6 @@ export const sendContactNotification: CollectionAfterChangeHook = async ({
 
     await req.payload.sendEmail({
       to: recipients,
-      from: FROM,
       ...(replyTo ? { replyTo } : {}),
       subject,
       html: renderHtml(rows, formTitle, submittedAt),
