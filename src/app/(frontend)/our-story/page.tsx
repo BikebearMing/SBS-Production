@@ -4,6 +4,7 @@ import type { Media } from '@payload-types'
 
 import Header from '@/components/Header/Header'
 import Footer from '@/components/Footer/Footer'
+import { toFooterProps } from '@/lib/footerProps'
 import StoryHero from '@/components/StoryHero/StoryHero'
 import OurStory from '@/components/OurStory/OurStory'
 import OurDifference from '@/components/OurDifference/OurDifference'
@@ -56,28 +57,7 @@ export default async function OurStoryRoute() {
     ?.filter((c: { title?: string; body?: string }) => c?.title && c?.body)
     .map((c: { title: string; body: string }) => ({ title: c.title, body: c.body }))
 
-  // Footer mirrors the rest of the site; ensure "Our Story" is in the directory.
-  const directory = footer?.directory?.map((d) => ({ label: d.label, href: d.href })) ?? []
-  if (!directory.some((d) => d.href === '/our-story')) {
-    directory.push({ label: 'OUR STORY', href: '/our-story' })
-  }
-  const footerProps = footer
-    ? {
-        address: footer.address ?? undefined,
-        phones: footer.phones?.map((p) => p.number),
-        directory,
-        updatesLabel: footer.updatesLabel ?? undefined,
-        showSocials: footer.showSocials ?? true,
-        socials: footer.socials?.map((s) => ({
-          label: s.label,
-          href: s.href,
-          icon: mediaUrl(s.icon),
-        })),
-        brandLogo: mediaUrl(footer.brandLogo),
-        copyright: footer.copyright ?? undefined,
-        email: footer.email ?? undefined,
-      }
-    : { directory }
+  const footerProps = toFooterProps(footer)
 
   return (
     <main className="grain-effect">

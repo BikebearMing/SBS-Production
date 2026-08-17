@@ -204,6 +204,7 @@ async function run() {
         { label: 'HOME', href: '/' },
         { label: 'WORKS', href: '/works' },
         { label: 'AWARDS', href: '/awards' },
+        { label: 'OUR STORY', href: '/our-story' },
       ],
       updatesLabel: 'GET THE LATEST UPDATES',
       socials: [

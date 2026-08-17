@@ -9,6 +9,7 @@ import type { Media } from '@payload-types'
 
 import Header from '@/components/Header/Header'
 import Footer from '@/components/Footer/Footer'
+import { toFooterProps } from '@/lib/footerProps'
 import AwardsPage, { type AwardYear } from '@/components/AwardsPage/AwardsPage'
 
 // Content comes from Payload at request time, so it's always fresh.
@@ -93,23 +94,7 @@ export default async function AwardsRoute() {
     years = groups
   }
 
-  const footerProps = footer
-    ? {
-        address: footer.address ?? undefined,
-        phones: footer.phones?.map((p) => p.number),
-        directory: footer.directory?.map((d) => ({ label: d.label, href: d.href })),
-        updatesLabel: footer.updatesLabel ?? undefined,
-        showSocials: footer.showSocials ?? true,
-        socials: footer.socials?.map((s) => ({
-          label: s.label,
-          href: s.href,
-          icon: mediaUrl(s.icon),
-        })),
-        brandLogo: mediaUrl(footer.brandLogo),
-        copyright: footer.copyright ?? undefined,
-        email: footer.email ?? undefined,
-      }
-    : {}
+  const footerProps = toFooterProps(footer)
 
   return (
     <main className="grain-effect">

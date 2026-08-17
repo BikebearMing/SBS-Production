@@ -6,6 +6,7 @@ import type { Media, Page } from '@payload-types'
 import Awards from '@/components/Awards/Awards'
 import Preloader from '@/components/Preloader/Preloader'
 import Footer from '@/components/Footer/Footer'
+import { toFooterProps } from '@/lib/footerProps'
 import Header from '@/components/Header/Header'
 import HeroSection from '@/components/Hero/HeroSection'
 import LogoCarousel from '@/components/LogoCarousel/LogoCarousel'
@@ -145,23 +146,7 @@ export default async function Home() {
     return url ? [url] : []
   })
 
-  const footerProps = footer
-    ? {
-        address: footer.address ?? undefined,
-        phones: footer.phones?.map((p) => p.number),
-        directory: footer.directory?.map((d) => ({ label: d.label, href: d.href })),
-        updatesLabel: footer.updatesLabel ?? undefined,
-        showSocials: footer.showSocials ?? true,
-        socials: footer.socials?.map((s) => ({
-          label: s.label,
-          href: s.href,
-          icon: mediaUrl(s.icon),
-        })),
-        brandLogo: mediaUrl(footer.brandLogo),
-        copyright: footer.copyright ?? undefined,
-        email: footer.email ?? undefined,
-      }
-    : {}
+  const footerProps = toFooterProps(footer)
 
   return (
     <main className="grain-effect">
