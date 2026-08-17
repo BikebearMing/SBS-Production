@@ -11,6 +11,9 @@ const isDev = process.env.NODE_ENV === 'development'
  *   picsum.photos                    ImpactCTA fallback trail images
  *   streamable.com                   seeded CMS video URLs rendered into <video src>
  *   www.youtube-nocookie.com         work-detail page embeds
+ *   www.googletagmanager.com         gtag.js loader (Google Analytics 4)
+ *   *.google-analytics.com           GA collect beacons — the endpoint is region-sharded
+ *   *.analytics.google.com           GA server-side tagging / cross-domain linker
  *
  * picsum and streamable both 302 to a CDN subdomain (fastly.picsum.photos,
  * cdn-cf-east.streamable.com) and CSP re-checks the redirect target against the
@@ -31,13 +34,13 @@ const cspDirectives = [
   `frame-ancestors 'self'`,
   `form-action 'self'`,
   // dev needs 'unsafe-eval' for HMR; production does not
-  `script-src 'self' 'unsafe-inline'${isDev ? ` 'unsafe-eval'` : ''}`,
+  `script-src 'self' 'unsafe-inline' https://www.googletagmanager.com${isDev ? ` 'unsafe-eval'` : ''}`,
   `style-src 'self' 'unsafe-inline' https://use.typekit.net`,
   `font-src 'self' data: https://use.typekit.net https://p.typekit.net`,
-  `img-src 'self' data: blob: https://picsum.photos https://*.picsum.photos https://*.typekit.net`,
+  `img-src 'self' data: blob: https://picsum.photos https://*.picsum.photos https://*.typekit.net https://www.googletagmanager.com https://*.google-analytics.com`,
   `media-src 'self' blob: https://streamable.com https://*.streamable.com`,
   // dev needs ws: for the HMR socket
-  `connect-src 'self' https://performance.typekit.net${isDev ? ' ws: wss:' : ''}`,
+  `connect-src 'self' https://performance.typekit.net https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com${isDev ? ' ws: wss:' : ''}`,
   `frame-src 'self' https://www.youtube-nocookie.com`,
   `worker-src 'self' blob:`,
   `manifest-src 'self'`,
