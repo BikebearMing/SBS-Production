@@ -27,6 +27,11 @@ const dirname = path.dirname(filename)
 const SMTP_HOST = process.env.SMTP_HOST || 'smtp-relay.gmail.com'
 const SMTP_PORT = Number(process.env.SMTP_PORT || 25)
 const EMAIL_FROM_ADDRESS = process.env.EMAIL_FROM || 'smgbrandstudio@thestar.com.my'
+// Name announced in the SMTP EHLO/HELO greeting. Nodemailer defaults this to the
+// machine hostname, which inside Docker is the random container ID — not a domain.
+// The relay refuses that ("present one of your domain names in the HELO or EHLO
+// command") and drops the connection at EHLO with a 421, so announce a real domain.
+const SMTP_EHLO_NAME = process.env.SMTP_EHLO_NAME || 'thestar.com.my'
 
 export default buildConfig({
   admin: {
@@ -70,6 +75,7 @@ export default buildConfig({
           transportOptions: {
             host: SMTP_HOST,
             port: SMTP_PORT,
+            name: SMTP_EHLO_NAME,
             // 465 is implicit TLS; 25/587 start plaintext and upgrade via
             // STARTTLS, which the Google relay supports — require it so
             // submissions are never sent in the clear.
