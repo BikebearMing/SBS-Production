@@ -67,7 +67,17 @@ inline in a section.
 - `next.config.ts` sets the response headers the site is graded on
   (securityheaders.com A+): CSP, HSTS, X-Frame-Options, X-Content-Type-Options,
   Referrer-Policy, Permissions-Policy — plus `poweredByHeader: false`. Don't remove them.
-- **Loading a new external origin means updating `cspDirectives` in the same file**, or the
+- **`upgrade-insecure-requests` and HSTS are scheme-conditional, by design.** One container
+  serves several hostnames behind Traefik and not all of them use TLS, so those two headers
+  are attached by a second `headers()` rule that only matches when `x-forwarded-proto` says
+  the request arrived over HTTPS. Emitting `upgrade-insecure-requests` on a plain-HTTP
+  hostname rewrites every asset URL to `https://`, which that host doesn't answer — the
+  document loads and every stylesheet/chunk/image 503s, giving a blank page. Keep the base
+  CSP list scheme-agnostic and add TLS-only directives to `httpsCspDirectives`.
+- **Order matters in `headers()`.** When several rules match one request, Next applies them
+  in order and the last value for a given key wins. The tight `/api/media/file/*` CSP must
+  stay last so it keeps overriding the main policy on that path.
+- **Loading a new external origin means updating `baseCspDirectives` in the same file**, or the
   browser silently blocks it. Check where the origin actually redirects to: `picsum.photos`
   and `streamable.com` both 302 to CDN subdomains, and CSP re-checks the redirect target,
   which is why those entries are wildcards.

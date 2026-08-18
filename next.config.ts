@@ -27,7 +27,7 @@ const isDev = process.env.NODE_ENV === 'development'
  * scripts, several components render inline style="" attributes, and the Payload admin
  * (same origin, /admin) relies on inline scripts/styles and dangerouslySetInnerHTML.
  */
-const cspDirectives = [
+const baseCspDirectives = [
   `default-src 'self'`,
   `base-uri 'self'`,
   `object-src 'none'`,
@@ -44,8 +44,21 @@ const cspDirectives = [
   `frame-src 'self' https://www.youtube-nocookie.com`,
   `worker-src 'self' blob:`,
   `manifest-src 'self'`,
-  `upgrade-insecure-requests`,
-].join('; ')
+]
+
+/**
+ * `upgrade-insecure-requests` is applied per-request, not globally.
+ *
+ * This one container is fronted by Traefik for several hostnames, and not all of them are
+ * served over TLS — the client wants one reachable over plain HTTP while the main domain
+ * stays HTTPS. The directive rewrites every subresource URL to https://, so emitting it on
+ * a plain-HTTP response makes the browser request assets over a scheme that host does not
+ * answer: the document loads and every stylesheet, chunk and image 503s, rendering a blank
+ * page. So the directive is attached only to responses Traefik marks as arriving over TLS
+ * (see `headers()` below), and the base list stays scheme-agnostic.
+ */
+const cspDirectives = baseCspDirectives.join('; ')
+const httpsCspDirectives = [...baseCspDirectives, `upgrade-insecure-requests`].join('; ')
 
 /**
  * Deny the sensitive features outright, but keep the ones the YouTube iframe declares in its
@@ -89,16 +102,41 @@ const nextConfig: NextConfig = {
         source: '/:path*',
         headers: [
           { key: 'Content-Security-Policy', value: cspDirectives },
-          {
-            key: 'Strict-Transport-Security',
-            value: 'max-age=63072000; includeSubDomains; preload',
-          },
           { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
           { key: 'X-Content-Type-Options', value: 'nosniff' },
           { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
           { key: 'Permissions-Policy', value: permissionsPolicy },
           { key: 'Cross-Origin-Opener-Policy', value: 'same-origin' },
           { key: 'X-DNS-Prefetch-Control', value: 'on' },
+        ],
+      },
+      {
+        // The two headers that only mean anything once the request actually arrived over
+        // TLS. Traefik terminates TLS and forwards the original scheme in X-Forwarded-Proto,
+        // so this rule matches only the HTTPS hostnames and leaves the plain-HTTP one alone.
+        //
+        // When several rules match one request Next applies them in order and the last value
+        // for a given key wins, so this overrides the scheme-agnostic CSP set above — and the
+        // media rule below in turn overrides both on its own path.
+        //
+        // The value is a regex matched against the whole header. `[hH][tT]...` because Next
+        // matches case-sensitively and the header's casing is the proxy's choice; the
+        // trailing group because a chain of proxies appends to the list and the client-facing
+        // scheme is the leftmost entry ("https, http").
+        source: '/:path*',
+        has: [
+          {
+            type: 'header',
+            key: 'x-forwarded-proto',
+            value: '[hH][tT][tT][pP][sS](?:\\s*,.*)?',
+          },
+        ],
+        headers: [
+          { key: 'Content-Security-Policy', value: httpsCspDirectives },
+          {
+            key: 'Strict-Transport-Security',
+            value: 'max-age=63072000; includeSubDomains; preload',
+          },
         ],
       },
       {
