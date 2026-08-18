@@ -10,7 +10,8 @@ import type { CollectionAfterChangeHook, Field } from 'payload'
  *
  * Delivery goes through the nodemailer adapter configured in payload.config.ts.
  * The From address is deliberately not set here — the adapter's
- * defaultFromAddress owns it, because the SMTP relay rejects any other sender.
+ * defaultFromAddress owns it, because SES rejects any sender that isn't a
+ * verified identity.
  * With SMTP_DISABLED=true Payload uses a console mock, so local dev never breaks.
  */
 

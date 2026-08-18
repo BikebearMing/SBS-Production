@@ -90,11 +90,16 @@ inline in a section.
 - Re-seed with `npm run seed` (idempotent — media matched by filename, page/footer/form upserted).
 - The contact form uses the Form Builder plugin (`forms` + `form-submissions` collections).
 - All form email goes out over SMTP through `@payloadcms/email-nodemailer` — it is the
-  only email adapter; don't add another. It's configured in `payload.config.ts` against the
-  Google Workspace relay (`smtp-relay.gmail.com:25`, STARTTLS) sending as
-  `smgbrandstudio@thestar.com.my`. The relay authorises the server by IP allowlist, so
-  there are no SMTP credentials — deployments need no email env vars. Set
-  `SMTP_DISABLED=true` (already in `.env.local`) for local dev: the relay rejects
-  non-allowlisted IPs, so emails are logged to the console instead.
+  only email adapter; don't add another. It's configured in `payload.config.ts` against
+  **Amazon SES** (`email-smtp.us-east-1.amazonaws.com:587`, STARTTLS) sending as
+  `smgbrandstudio@thestar.com.my`.
+- **SES authenticates every connection**, so unlike the old IP-allowlisted Google relay,
+  `SMTP_USER`/`SMTP_PASS` (SES SMTP credentials — not the raw IAM secret key) must be set
+  in every environment that sends mail, production included. Without them the config still
+  loads and logs a warning, and sends fail at the server with a 530. `.env.example` lists
+  every env var the app reads — keep it in step when you add one.
+- Set `SMTP_DISABLED=true` (already in `.env.local`) for local dev. The credentials work
+  from anywhere now, so this is what stops dev runs from mailing real people and spending
+  the SES quota; flip it to `false` to smoke-test a real send.
 - The From address is owned by the adapter's `defaultFromAddress`; never pass a `from` in
-  a `sendEmail` call — the relay rejects senders outside the domain.
+  a `sendEmail` call — SES rejects any sender that isn't a verified identity in the region.

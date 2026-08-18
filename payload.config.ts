@@ -20,18 +20,30 @@ import { fileURLToPath } from 'url'
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
-// SMTP delivery (Google Workspace relay). The relay authorises our server by IP
-// allowlist, so there are normally no credentials — SMTP_USER/SMTP_PASS are
-// applied only if they're set, e.g. if the relay is switched to authenticated
-// mode or a plain Gmail mailbox is used instead.
-const SMTP_HOST = process.env.SMTP_HOST || 'smtp-relay.gmail.com'
-const SMTP_PORT = Number(process.env.SMTP_PORT || 25)
+// SMTP delivery (Amazon SES). Unlike the old Google Workspace relay, SES does not
+// allowlist by IP — every connection must authenticate with SES SMTP credentials,
+// so SMTP_USER/SMTP_PASS are required wherever email is enabled.
+const SMTP_HOST = process.env.SMTP_HOST || 'email-smtp.us-east-1.amazonaws.com'
+// 587 is SES's STARTTLS submission port; 465/2465 are implicit TLS and 25/2587 also
+// work, but 25 is throttled by SES and blocked outbound by many hosts.
+const SMTP_PORT = Number(process.env.SMTP_PORT || 587)
+const SMTP_USER = process.env.SMTP_USER
+const SMTP_PASS = process.env.SMTP_PASS
+// SES only accepts a From that matches a verified identity in the same region.
 const EMAIL_FROM_ADDRESS = process.env.EMAIL_FROM || 'smgbrandstudio@thestar.com.my'
 // Name announced in the SMTP EHLO/HELO greeting. Nodemailer defaults this to the
 // machine hostname, which inside Docker is the random container ID — not a domain.
-// The relay refuses that ("present one of your domain names in the HELO or EHLO
-// command") and drops the connection at EHLO with a 421, so announce a real domain.
+// SES tolerates that, but a real domain keeps the handshake clean and portable.
 const SMTP_EHLO_NAME = process.env.SMTP_EHLO_NAME || 'thestar.com.my'
+
+const emailEnabled = process.env.SMTP_DISABLED !== 'true'
+if (emailEnabled && !(SMTP_USER && SMTP_PASS)) {
+  // Not fatal — failing the config load would take the whole app down over email.
+  console.warn(
+    '[email] SMTP_USER/SMTP_PASS are not set. Amazon SES requires authentication; ' +
+      'sends will fail with 530 until they are provided (or set SMTP_DISABLED=true).',
+  )
+}
 
 export default buildConfig({
   admin: {
@@ -58,33 +70,32 @@ export default buildConfig({
   // Email delivery — every form email (contact notifications and any emails
   // configured on a form in the admin) goes out over SMTP via nodemailer.
   // Set SMTP_DISABLED=true (see .env.local) to fall back to Payload's console
-  // mock, which is what local dev wants: the relay only accepts allowlisted
-  // server IPs, and outbound port 25 is usually blocked on dev machines.
-  ...(process.env.SMTP_DISABLED === 'true'
+  // mock, which is what local dev wants when there are no SES credentials to hand
+  // (and it stops dev runs from spending the real SES sending quota).
+  ...(!emailEnabled
     ? {}
     : {
         email: nodemailerAdapter({
           defaultFromName: 'Star Brand Studio',
-          // The relay only accepts a From within the thestar.com.my domain —
-          // anything else is rejected, so this is not a free-form field.
+          // SES rejects any From that isn't a verified identity (this address or
+          // its domain) in the SES region above, so this is not a free-form field.
           defaultFromAddress: EMAIL_FROM_ADDRESS,
           // The adapter otherwise opens a test connection when the config is
           // loaded, which stalls `next build` inside Docker (the build container
-          // can't reach the relay). Send failures are logged by the hook anyway.
+          // can't reach SES). Send failures are logged by the hook anyway.
           skipVerify: true,
           transportOptions: {
             host: SMTP_HOST,
             port: SMTP_PORT,
             name: SMTP_EHLO_NAME,
-            // 465 is implicit TLS; 25/587 start plaintext and upgrade via
-            // STARTTLS, which the Google relay supports — require it so
-            // submissions are never sent in the clear.
-            secure: SMTP_PORT === 465,
-            requireTLS: SMTP_PORT !== 465,
+            // 465/2465 are implicit TLS; 25/587/2587 start plaintext and upgrade
+            // via STARTTLS — require it so credentials and submissions are never
+            // sent in the clear.
+            secure: SMTP_PORT === 465 || SMTP_PORT === 2465,
+            requireTLS: !(SMTP_PORT === 465 || SMTP_PORT === 2465),
             connectionTimeout: 10_000,
-            ...(process.env.SMTP_USER && process.env.SMTP_PASS
-              ? { auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS } }
-              : {}),
+            // SES always requires auth; the warning above fires if these are unset.
+            ...(SMTP_USER && SMTP_PASS ? { auth: { user: SMTP_USER, pass: SMTP_PASS } } : {}),
           },
         }),
       }),
