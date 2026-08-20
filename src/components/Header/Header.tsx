@@ -24,8 +24,8 @@ export default function Header() {
   return (
     <header className={`site-header${menuOpen ? ' is-menu-open' : ''}`}>
       <div className="wrapper">
-        <a href="/" className="site-header__logo" aria-label="Star Brand Studio">
-          <img src="/Logo.svg" alt="Star Brand Studio" />
+        <a href="/" className="site-header__logo" aria-label="SMG Brand Studio">
+          <img src="/Logo.svg" alt="SMG Brand Studio" />
         </a>
         {/* Desktop nav — hidden on mobile, where the burger + drawer take over. */}
         <nav className="site-header__nav">

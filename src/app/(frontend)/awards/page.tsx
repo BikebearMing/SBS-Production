@@ -16,7 +16,8 @@ import AwardsPage, { type AwardYear } from '@/components/AwardsPage/AwardsPage'
 export const dynamic = 'force-dynamic'
 
 export const metadata = {
-  title: 'Awards — Star Brand Studio',
+  title: 'Awards',
+  alternates: { canonical: '/awards' },
   description: 'Award-winning ideas, grounded in the craft of storytelling.',
 }
 

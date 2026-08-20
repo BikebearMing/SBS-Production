@@ -12,7 +12,8 @@ import ContactForm, { type ContactField } from '@/components/ContactForm/Contact
 export const dynamic = 'force-dynamic'
 
 export const metadata = {
-  title: 'Contact — Star Brand Studio',
+  title: 'Contact',
+  alternates: { canonical: '/contact' },
   description:
     'Let’s connect — tell us about your brand and we’ll build something worth talking about.',
 }

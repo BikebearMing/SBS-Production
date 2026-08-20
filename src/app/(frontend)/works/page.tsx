@@ -12,8 +12,9 @@ import { type WorksSlide } from '@/components/WorksSlider/WorksSlider'
 export const dynamic = 'force-dynamic'
 
 export const metadata = {
-  title: 'Works — Star Brand Studio',
-  description: 'Selected works from Star Brand Studio.',
+  title: 'Works',
+  alternates: { canonical: '/works' },
+  description: 'Selected works from SMG Brand Studio.',
 }
 
 function mediaUrl(m: number | Media | null | undefined): string | undefined {

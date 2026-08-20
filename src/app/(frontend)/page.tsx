@@ -20,6 +20,12 @@ import ContactForm, { type ContactField } from '@/components/ContactForm/Contact
 // Content comes from Payload at request time, so it's always fresh.
 export const dynamic = 'force-dynamic'
 
+// The homepage carries the canonical for the origin — this is the URL Google
+// matches against the WebSite structured data when picking the site name.
+export const metadata = {
+  alternates: { canonical: '/' },
+}
+
 type Block = NonNullable<Page['layout']>[number]
 type BlockOf<T extends Block['blockType']> = Extract<Block, { blockType: T }>
 

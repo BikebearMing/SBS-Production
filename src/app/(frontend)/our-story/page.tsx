@@ -13,7 +13,8 @@ import OurDifference from '@/components/OurDifference/OurDifference'
 export const dynamic = 'force-dynamic'
 
 export const metadata = {
-  title: 'Our Story — Star Brand Studio',
+  title: 'Our Story',
+  alternates: { canonical: '/our-story' },
   description:
     'The full-service marketing arm of Star Media Group — combining the credibility of journalism, the rigour of data, and the reach of an integrated media group.',
 }

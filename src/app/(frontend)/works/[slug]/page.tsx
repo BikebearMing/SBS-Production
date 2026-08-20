@@ -98,8 +98,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { work } = await getWorkData(slug)
   const title = work?.title ?? 'Works'
   return {
-    title: `${title} — Star Brand Studio`,
-    description: work?.description ?? 'Selected works from Star Brand Studio.',
+    title,
+    description: work?.description ?? 'Selected works from SMG Brand Studio.',
   }
 }
 

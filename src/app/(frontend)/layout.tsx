@@ -30,9 +30,50 @@ const interTight = Inter_Tight({
  */
 const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_ID ?? 'G-17JNB6DNJ5'
 
+/**
+ * Canonical origin. Google picks the search-result site name from the WebSite
+ * structured data below, and needs the `url` there to be the canonical homepage —
+ * so this has to match the address the site is actually indexed under (no trailing
+ * slash). Override per-environment with NEXT_PUBLIC_SITE_URL.
+ */
+const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://smgbrandstudio.my').replace(
+  /\/$/,
+  '',
+)
+
+const SITE_NAME = 'SMG Brand Studio'
+
+/**
+ * The site name in Google results comes from three signals that must agree —
+ * the WebSite JSON-LD `name`, `og:site_name`, and the homepage <title>. If they
+ * disagree Google picks its own, which is how the old "Star Brand Studio" name
+ * got locked in. Change the name in one place (SITE_NAME) so they can't drift.
+ */
+const websiteJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: SITE_NAME,
+  url: `${SITE_URL}/`,
+}
+
 export const metadata: Metadata = {
-  title: 'Star Brand Studio',
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: SITE_NAME,
+    template: `%s — ${SITE_NAME}`,
+  },
   description: 'Creative studio',
+  applicationName: SITE_NAME,
+  // No `alternates.canonical` / `openGraph.url` here on purpose — root metadata is
+  // inherited by every route, so a value of '/' would canonicalise the whole site
+  // to the homepage. Each page sets its own.
+  openGraph: {
+    // No `title`/`description` here — Next falls back to each page's resolved
+    // values (title template included). Pinning them would give every route the
+    // homepage's title and blurb in link previews.
+    type: 'website',
+    siteName: SITE_NAME,
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -40,6 +81,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${instrumentSerif.variable} ${interTight.variable}`}>
       <head>
         <link rel="stylesheet" href="https://use.typekit.net/bpi7jxx.css" />
+        {/* Plain <script type="application/ld+json"> — a data block, not executed
+            code, so the CSP in next.config.ts does not apply to it. */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+        />
       </head>
       <body>
         <SmoothScroll />
