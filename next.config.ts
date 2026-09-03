@@ -11,7 +11,8 @@ const isDev = process.env.NODE_ENV === 'development'
  *   picsum.photos                    ImpactCTA fallback trail images
  *   streamable.com                   seeded CMS video URLs rendered into <video src>
  *   www.youtube-nocookie.com         work-detail page embeds
- *   www.googletagmanager.com         gtag.js loader (Google Analytics 4)
+ *   www.googletagmanager.com         gtag.js loader (GA4) + gtm.js container and its
+ *                                    <noscript> ns.html iframe (Google Tag Manager)
  *   *.google-analytics.com           GA collect beacons — the endpoint is region-sharded
  *   *.analytics.google.com           GA server-side tagging / cross-domain linker
  *
@@ -41,7 +42,7 @@ const baseCspDirectives = [
   `media-src 'self' blob: https://streamable.com https://*.streamable.com`,
   // dev needs ws: for the HMR socket
   `connect-src 'self' https://performance.typekit.net https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com${isDev ? ' ws: wss:' : ''}`,
-  `frame-src 'self' https://www.youtube-nocookie.com`,
+  `frame-src 'self' https://www.youtube-nocookie.com https://www.googletagmanager.com`,
   `worker-src 'self' blob:`,
   `manifest-src 'self'`,
 ]

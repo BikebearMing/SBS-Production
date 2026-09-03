@@ -31,6 +31,17 @@ const interTight = Inter_Tight({
 const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_ID ?? 'G-17JNB6DNJ5'
 
 /**
+ * Google Tag Manager. Independent of the gtag.js block above: this only loads the
+ * container, and whatever tags the container holds fire on their own. If a GA4 tag
+ * for GA_MEASUREMENT_ID is ever added inside the container, remove the gtag.js
+ * scripts below or every pageview is counted twice.
+ *
+ * Same CSP note as GA4 — plus the <noscript> iframe needs www.googletagmanager.com
+ * in `frame-src`.
+ */
+const GTM_CONTAINER_ID = process.env.NEXT_PUBLIC_GTM_ID ?? 'GTM-MNFVNRFT'
+
+/**
  * Canonical origin. Google picks the search-result site name from the WebSite
  * structured data below, and needs the `url` there to be the canonical homepage —
  * so this has to match the address the site is actually indexed under (no trailing
@@ -89,9 +100,25 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body>
+        {/* GTM's no-JavaScript fallback. Must be the first thing in <body>, and it
+            cannot be a next/script — it is an iframe, not a script. */}
+        <noscript
+          dangerouslySetInnerHTML={{
+            __html: `<iframe src="https://www.googletagmanager.com/ns.html?id=${GTM_CONTAINER_ID}" height="0" width="0" style="display:none;visibility:hidden"></iframe>`,
+          }}
+        />
         <SmoothScroll />
         <MaskUpHeadings />
         <PageTransition>{children}</PageTransition>
+        <Script id="google-tag-manager" strategy="afterInteractive">
+          {`
+            (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+            })(window,document,'script','dataLayer','${GTM_CONTAINER_ID}');
+          `}
+        </Script>
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
           strategy="afterInteractive"
