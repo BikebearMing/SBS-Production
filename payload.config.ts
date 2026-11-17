@@ -46,6 +46,13 @@ if (emailEnabled && !(SMTP_USER && SMTP_PASS)) {
 }
 
 export default buildConfig({
+  serverURL: process.env.NEXT_PUBLIC_SERVER_URL || 'https://smgbrandstudio.my',
+  cors: [
+    process.env.NEXT_PUBLIC_SERVER_URL || 'https://smgbrandstudio.my',
+  ],
+  csrf: [
+    process.env.NEXT_PUBLIC_SERVER_URL || 'https://smgbrandstudio.my',
+  ],
   admin: {
     user: Users.slug,
     importMap: {
